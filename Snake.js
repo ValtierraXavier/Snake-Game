@@ -8,6 +8,7 @@ let x = boardXStart
 let y = boardYStart
 let dx = 25
 let dy = 25
+let currentKey = 'ArrowDown'
 
 
 const gameBoard = (key)=>{
@@ -16,39 +17,34 @@ const gameBoard = (key)=>{
     c.fillStyle = 'black'
     c.fillRect((canvas.width/2) - 150, 100, 300, 300)
     c.stroke()
-    if(key.key === 'ArrowUp'){
-        key.preventDefault()
+    if(currentKey === 'ArrowUp'){
         if(y === boardYStart){
             y = boardYStart + 275
         }else{
             y -= dy
         }
     }
-    if(key.key === 'ArrowRight'){
-        key.preventDefault()
+    if(currentKey === 'ArrowRight'){
         if(x === boardXStart + 275){
             x = boardXStart
         }else{
             x += dx
         }
     }
-    if(key.key === 'ArrowDown'){
-        key.preventDefault()
+    if(currentKey === 'ArrowDown'){
         if(y === boardYStart + 275){
             y = boardYStart
         }else{
             y += dy
         }
     }
-    if(key.key === 'ArrowLeft'){
-        key.preventDefault()
+    if(currentKey === 'ArrowLeft'){
         if(x === boardXStart){
             x = boardXStart + 275
         }else{
             x -= dx
         }
     }    
-    
     c.beginPath()
     c.fillStyle = 'red'
     c.fillRect(x, y, 25, 25)
@@ -65,6 +61,17 @@ window.addEventListener('DOMContentLoaded',()=>{
     c.fillRect(x, y, 25, 25)
     c.stroke()
 })
+const setKey = (key) => {
+    if(key.key === 'ArrowUp' || key.key === 'ArrowDown' || key.key === 'ArrowLeft' || key.key === 'ArrowRight'){
+        key.preventDefault()
+        currentKey = key.key
+    }
+
+}
 window.addEventListener('keydown',(e)=>{
-    gameBoard(e)
-})
+        setKey(e)
+}) 
+
+setInterval(()=>{
+    gameBoard(currentKey)
+},200);
