@@ -4,50 +4,65 @@ canvas.width = window.innerWidth
 c = canvas.getContext("2d")
 const boardXStart = (canvas.width/2) - 150
 const boardYStart = 100
-let x = boardXStart
-let y = boardYStart
-let dx = 25
-let dy = 25
-let currentKey = 'ArrowDown'
+// let snakeObj.x = boardXStart
+// let snakeObj.y = boardYStart
+// let dx = 25
+// let dy = 25
+// let currentKey = 'ArrowDown'
+// const displayPause = false;
+const snakeObj = {
+    x: boardXStart,
+    y: boardYStart,
+    dx: 25,
+    dy: 25,
+    currentKey: 'ArrowDown',
+    displayPause: true,
+    snakeColor: {
+        headColor: "red",
+        bodyColor: "grey"
+    }
+}
+let interval
 
 
 const gameBoard = (key)=>{
     c.clearRect(0,0, canvas.width, canvas.height)
     c.beginPath()
-    c.fillStyle = 'black'
+    c.fillStyle = `black`
     c.fillRect((canvas.width/2) - 150, 100, 300, 300)
     c.stroke()
-    if(currentKey === 'ArrowUp'){
-        if(y === boardYStart){
-            y = boardYStart + 275
+    if(snakeObj.currentKey === 'ArrowUp'){
+        if(snakeObj.y === boardYStart){
+            snakeObj.y = boardYStart + 275
         }else{
-            y -= dy
+            snakeObj.y -= snakeObj.dy
         }
     }
-    if(currentKey === 'ArrowRight'){
-        if(x === boardXStart + 275){
-            x = boardXStart
+    if(snakeObj.currentKey === 'ArrowRight'){
+        if(snakeObj.x === boardXStart + 275){
+            snakeObj.x = boardXStart
         }else{
-            x += dx
+            snakeObj.x += snakeObj.dx
         }
     }
-    if(currentKey === 'ArrowDown'){
-        if(y === boardYStart + 275){
-            y = boardYStart
+    if(snakeObj.currentKey === 'ArrowDown'){
+        if(snakeObj.y === boardYStart + 275){
+            snakeObj.y = boardYStart
         }else{
-            y += dy
+            snakeObj.y += snakeObj.dy
         }
     }
-    if(currentKey === 'ArrowLeft'){
-        if(x === boardXStart){
-            x = boardXStart + 275
+    if(snakeObj.currentKey === 'ArrowLeft'){
+        if(snakeObj.x === boardXStart){
+            snakeObj.x = boardXStart + 275
         }else{
-            x -= dx
+            snakeObj.x -= snakeObj.dx
         }
-    }    
+    }  
+    
     c.beginPath()
-    c.fillStyle = 'red'
-    c.fillRect(x, y, 25, 25)
+    c.fillStyle = `${snakeObj.snakeColor.headColor}`
+    c.fillRect(snakeObj.x, snakeObj.y, 25, 25)
     c.stroke()
 }
 window.addEventListener('DOMContentLoaded',()=>{
@@ -57,21 +72,47 @@ window.addEventListener('DOMContentLoaded',()=>{
     c.fillRect((canvas.width/2) - 150, 100, 300, 300)
     c.stroke()
     c.beginPath()
-    c.fillStyle = 'red'
-    c.fillRect(x, y, 25, 25)
+    c.fillStyle = `${snakeObj.snakeColor.headColor}`
+    c.fillRect(snakeObj.x, snakeObj.y, 25, 25)
     c.stroke()
 })
 const setKey = (key) => {
+    if(key.key === ' '){
+        return
+    }
     if(key.key === 'ArrowUp' || key.key === 'ArrowDown' || key.key === 'ArrowLeft' || key.key === 'ArrowRight'){
         key.preventDefault()
-        currentKey = key.key
+        snakeObj.currentKey = key.key
     }
-
 }
-window.addEventListener('keydown',(e)=>{
-        setKey(e)
-}) 
 
-setInterval(()=>{
-    gameBoard(currentKey)
-},200);
+
+
+
+const stopSnake = () => {
+    clearInterval(interval);
+    snakeObj.displayPause = true;
+}
+
+const startSnake = () => {
+    interval = setInterval(() => {
+        gameBoard(snakeObj.currentKey)
+        },100)
+        snakeObj.displayPause = false       
+    }
+    
+    window.addEventListener('keydown',(e)=>{
+        setKey(e)
+        if(e.key === ' '){
+            console.log("called")
+            if(snakeObj.displayPause){
+                console.log("pause")
+                startSnake()
+            }
+            else{
+                stopSnake()
+                console.log("unpaused")
+            }
+        }
+    }) 
+    
