@@ -156,9 +156,12 @@ const gameBoard = ()=>{
     // draws food object in a random location on the board
     if(snakeObj.dead === false){        
         foodObj.drawFood()
-        //draws snake head
-        snakeObj.drawSnake()  
+        // draws snake head
+        snakeObj.drawSnake()
+        // draws snake tail  
         snakeObj.drawSnakeTail()  
+        // sets previousCoordinates to currentCoordinates AFTER drawing current frame
+        // makes a tail following effect.
         snakeObj.previousCoordinates = {...snakeObj.currentCoordinates}
         console.log(snakeObj.previousCoordinates)
     }
