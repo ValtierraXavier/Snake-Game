@@ -41,7 +41,6 @@ const snakeObj = {
     start: () => {
         interval = setInterval(() => {
             gameBoard()
-            console.log(tail.tailArr)
         },150)
         snakeObj.displayPause = false 
         snakeObj.isDead = false
@@ -71,20 +70,14 @@ const tail = {
     tailColor: "grey",
     update: () => {
         const arr = []
-        if(snakeObj.length === 1){  
-            tail.tailArr.pop()
-            tail.tailArr.push(snakeObj.previousCoordinates)
-        }else if(snakeObj.length >= 2){
-           tail.tailArr.unshift(snakeObj.previousCoordinates)
+        if(snakeObj.length > 0){
+            tail.tailArr.unshift(snakeObj.previousCoordinates)
 
             for(let i = 0; i < tail.tailArr.length; i++){
                 arr.push(tail.tailArr[i])
-                console.log(arr) 
-            }
-            
-            tail.tailArr = [...arr.slice(0, snakeObj.length - 1)]
+            }     
+            tail.tailArr = [...arr.slice(0, snakeObj.length + 1)]
         }
-        console.log('tailArr', tail.tailArr)
     },
     draw: () => {
         tail.update()
@@ -114,7 +107,6 @@ const foodObj = {
         c.fillStyle = `${foodObj.foodColor}`
         c.fillRect(foodObj.x, foodObj.y , 25, 25)
         c.stroke()
-        console.log(snakeObj.length)
     }
 }
 //Draw the board on initial load
@@ -127,7 +119,6 @@ window.addEventListener('DOMContentLoaded',()=>{
 window.addEventListener('keydown',(e)=>{
     setKey(e)
     if(e.key === ' '){
-        console.log("called")
         if(snakeObj.displayPause){
             console.log("unpaused")
             snakeObj.start()
@@ -190,12 +181,10 @@ const gameBoard = ()=>{
         // draws snake tail 
         if(snakeObj.length >= 1) {            
             tail.draw()  
-            console.log('draw tail')
         }
         // sets previousCoordinates to currentCoordinates AFTER drawing current frame
         // makes a tail following effect.
         snakeObj.previousCoordinates = {...snakeObj.currentCoordinates}
-        console.log(snakeObj.previousCoordinates)
     }
 }
 
