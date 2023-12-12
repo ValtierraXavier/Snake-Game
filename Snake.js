@@ -32,55 +32,82 @@ const snakeObj = {
     length: 0,
     currentKey: 'ArrowDown',
     displayPause: true,
-    dead: false,
+    isDead: false,
     headColor: "red",
     snakeTail: {
-        length: 0,
-        tailArr: [],
-        tailColor: "grey"
+        
     },
     // starts the interval calls to draw the board
-    startSnake: () => {
+    start: () => {
         interval = setInterval(() => {
             gameBoard()
-        },300)
+            console.log(tail.tailArr)
+        },150)
         snakeObj.displayPause = false 
-        snakeObj.dead = false
+        snakeObj.isDead = false
     },
     // clears the draw interval
-    stopSnake: () => {
+    stop: () => {
         clearInterval(interval);
         snakeObj.displayPause = true;
     },
     //resets the board and clears the draw interval
-    snakeDead: async () => {
+    dead: async () => {
         clearInterval(interval)
         resetBoard()
-        snakeObj.dead = true
+        snakeObj.isDead = true
     },
-    drawSnake: () => {
+    draw: () => {
         c.beginPath()
         c.fillStyle = `${snakeObj.headColor}`
         c.fillRect(snakeObj.currentCoordinates.x, snakeObj.currentCoordinates.y, snakeObj.size, snakeObj.size)
         c.stroke()
+    },  
+}
+
+const tail = {
+    length: 0,
+    tailArr: [],
+    tailColor: "grey",
+    update: () => {
+        const arr = []
+        if(snakeObj.length === 1){  
+            tail.tailArr.pop()
+            tail.tailArr.push(snakeObj.previousCoordinates)
+        }else if(snakeObj.length >= 2){
+            tail.tailArr.unshift(snakeObj.previousCoordinates)
+            for(let i = 0; i < tail.tailArr.length; i++){
+                arr.push(tail.tailArr[i])
+                console.log(arr)
+            }
+            tail.tailArr = [...arr]
+        }
+        console.log('tailArr', tail.tailArr)
     },
-    drawSnakeTail: () => {        
-        c.beginPath()
-        c.fillStyle = `${snakeObj.snakeTail.tailColor}`
-        c.fillRect(snakeObj.previousCoordinates.x, snakeObj.previousCoordinates.y, snakeObj.size, snakeObj.size)
-        c.stroke()
+    draw: () => {
+        tail.update()
+    if(snakeObj.length >= 1){            
+         // snakeObj.snakeTail.tailArr.forEach(element => {
+        for(let i = 0; i < tail.tailArr.length; i++){                    
+                 c.beginPath()
+                 c.fillStyle = `${tail.tailColor}`
+                 c.fillRect(tail.tailArr[i-1 >= 0?i-1:i]?.x, tail.tailArr[i-1 >= 0?i-1:i]?.y, snakeObj.size, snakeObj.size)
+                 c.stroke()
+            }
     }
+    
+}      
 }
 
 const foodObj = {
-    x: boardXStart,
-    y: boardYStart,
+    x: boardXStart + 125,
+    y: boardYStart + 125,
     size: 25,
     dx: 25,
     dy: 25,
     displayPause: true,
     foodColor: "yellow",
-    drawFood: () => {
+    draw: () => {
         c.beginPath()
         c.fillStyle = `${foodObj.foodColor}`
         c.fillRect(foodObj.x, foodObj.y , 25, 25)
@@ -91,7 +118,7 @@ const foodObj = {
 //Draw the board on initial load
 window.addEventListener('DOMContentLoaded',()=>{
     drawBoard()
-    snakeObj.drawSnake()
+    snakeObj.draw()
 })
 
 //detect space bar and toggle game state pause or unpause
@@ -101,11 +128,11 @@ window.addEventListener('keydown',(e)=>{
         console.log("called")
         if(snakeObj.displayPause){
             console.log("unpaused")
-            snakeObj.startSnake()
+            snakeObj.start()
         }
         else{
             console.log("pause")
-            snakeObj.stopSnake()
+            snakeObj.stop()
         }
     }
 }) 
@@ -123,7 +150,7 @@ const gameBoard = ()=>{
     if(snakeObj.currentKey === 'ArrowUp'){
         if(snakeObj.currentCoordinates.y === boardYStart){
             // snakeObj.currentCoordinates.y = boardYStart + 275
-            snakeObj.snakeDead()
+            snakeObj.dead()
         }else{
 
             snakeObj.currentCoordinates.y -= snakeObj.dy
@@ -132,7 +159,7 @@ const gameBoard = ()=>{
     if(snakeObj.currentKey === 'ArrowRight'){
         if(snakeObj.currentCoordinates.x === boardXStart + 275){
             // snakeObj.currentCoordinates.x = boardXStart
-            snakeObj.snakeDead()
+            snakeObj.dead()
         }else{
             snakeObj.currentCoordinates.x += snakeObj.dx
         }
@@ -140,7 +167,7 @@ const gameBoard = ()=>{
     if(snakeObj.currentKey === 'ArrowDown'){
         if(snakeObj.currentCoordinates.y === boardYStart + 275){
             // snakeObj.currentCoordinates.y = boardYStart
-            snakeObj.snakeDead()
+            snakeObj.dead()
         }else{
             snakeObj.currentCoordinates.y += snakeObj.dy
         }
@@ -148,18 +175,21 @@ const gameBoard = ()=>{
     if(snakeObj.currentKey === 'ArrowLeft'){
         if(snakeObj.currentCoordinates.x === boardXStart){
             // snakeObj.currentCoordinates.x = boardXStart + 275
-            snakeObj.snakeDead()
+            snakeObj.dead()
         }else{
             snakeObj.currentCoordinates.x -= snakeObj.dx
         }
     }  
     // draws food object in a random location on the board
-    if(snakeObj.dead === false){        
-        foodObj.drawFood()
+    if(snakeObj.isDead === false){        
+        foodObj.draw()
         // draws snake head
-        snakeObj.drawSnake()
-        // draws snake tail  
-        snakeObj.drawSnakeTail()  
+        snakeObj.draw()
+        // draws snake tail 
+        if(snakeObj.length >= 1) {            
+            tail.draw()  
+            console.log('draw tail')
+        }
         // sets previousCoordinates to currentCoordinates AFTER drawing current frame
         // makes a tail following effect.
         snakeObj.previousCoordinates = {...snakeObj.currentCoordinates}
@@ -183,14 +213,14 @@ const getRandomCoordinates = () => {
     const randomYMultiplier = Math.floor(Math.random() * divs)
     foodObj.x = randomXMultiplier * 25
     foodObj.y = randomYMultiplier * 25
-    foodObj.drawFood()
+    foodObj.draw()
 }
 
 //checks snake coordinates against the food coordinates
 const checkCoordinates = () => {
     if(snakeObj.currentCoordinates.x === foodObj.x && snakeObj.currentCoordinates.y === foodObj.y){
         getRandomCoordinates()
-        snakeObj.length += 1
+        snakeObj.length++ 
     }
 }
 
@@ -209,10 +239,13 @@ const setKey = (key) => {
 const resetBoard = async () => {
     snakeObj.currentCoordinates.x = boardXStart
     snakeObj.currentCoordinates.y = boardYStart
+    snakeObj.previousCoordinates.x = boardXStart
+    snakeObj.previousCoordinates.y = boardYStart
     snakeObj.length = 0
     snakeObj.currentKey = "ArrowDown"
     snakeObj.displayPause = true
+    tail.tailArr = []
     c.clearRect(0,0,300,300)
     drawBoard()
-    snakeObj.drawSnake()
+    snakeObj.draw()
 }
