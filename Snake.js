@@ -75,12 +75,14 @@ const tail = {
             tail.tailArr.pop()
             tail.tailArr.push(snakeObj.previousCoordinates)
         }else if(snakeObj.length >= 2){
-            tail.tailArr.unshift(snakeObj.previousCoordinates)
+           tail.tailArr.unshift(snakeObj.previousCoordinates)
+
             for(let i = 0; i < tail.tailArr.length; i++){
                 arr.push(tail.tailArr[i])
-                console.log(arr)
+                console.log(arr) 
             }
-            tail.tailArr = [...arr]
+            
+            tail.tailArr = [...arr.slice(0, snakeObj.length - 1)]
         }
         console.log('tailArr', tail.tailArr)
     },
