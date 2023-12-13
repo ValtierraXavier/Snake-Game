@@ -17,7 +17,7 @@ const blink = (ms) => {
     return new Promise (resolve => setTimeout(()=>{resolve()}, ms))
 }
 
-const snakeObj = {
+const head = {
     currentCoordinates: {
         x: boardXStart,
         y: boardYStart
@@ -34,32 +34,29 @@ const snakeObj = {
     displayPause: true,
     isDead: false,
     headColor: "red",
-    snakeTail: {
-        
-    },
     // starts the interval calls to draw the board
     start: () => {
         interval = setInterval(() => {
             gameBoard()
         },150)
-        snakeObj.displayPause = false 
-        snakeObj.isDead = false
+        head.displayPause = false 
+        head.isDead = false
     },
     // clears the draw interval
     stop: () => {
         clearInterval(interval);
-        snakeObj.displayPause = true;
+        head.displayPause = true;
     },
     //resets the board and clears the draw interval
     dead: async () => {
+        head.isDead = true
         clearInterval(interval)
         resetBoard()
-        snakeObj.isDead = true
     },
     draw: () => {
         c.beginPath()
-        c.fillStyle = `${snakeObj.headColor}`
-        c.fillRect(snakeObj.currentCoordinates.x, snakeObj.currentCoordinates.y, snakeObj.size, snakeObj.size)
+        c.fillStyle = `${head.headColor}`
+        c.fillRect(head.currentCoordinates.x, head.currentCoordinates.y, head.size, head.size)
         c.stroke()
     },  
 }
@@ -70,23 +67,22 @@ const tail = {
     tailColor: "grey",
     update: () => {
         const arr = []
-        if(snakeObj.length > 0){
-            tail.tailArr.unshift(snakeObj.previousCoordinates)
+        if(head.length > 0){
+            tail.tailArr.unshift(head.previousCoordinates)
 
             for(let i = 0; i < tail.tailArr.length; i++){
                 arr.push(tail.tailArr[i])
             }     
-            tail.tailArr = [...arr.slice(0, snakeObj.length + 1)]
+            tail.tailArr = [...arr.slice(0, head.length + 1)]
         }
     },
     draw: () => {
         tail.update()
-    if(snakeObj.length >= 1){            
-         // snakeObj.snakeTail.tailArr.forEach(element => {
+    if(head.length >= 1){            
         for(let i = 0; i < tail.tailArr.length; i++){                    
                  c.beginPath()
                  c.fillStyle = `${tail.tailColor}`
-                 c.fillRect(tail.tailArr[i-1 >= 0?i-1:i]?.x, tail.tailArr[i-1 >= 0?i-1:i]?.y, snakeObj.size, snakeObj.size)
+                 c.fillRect(tail.tailArr[i-1 >= 0?i-1:i]?.x, tail.tailArr[i-1 >= 0?i-1:i]?.y, head.size, head.size)
                  c.stroke()
             }
     }
@@ -112,20 +108,20 @@ const foodObj = {
 //Draw the board on initial load
 window.addEventListener('DOMContentLoaded',()=>{
     drawBoard()
-    snakeObj.draw()
+    head.draw()
 })
 
 //detect space bar and toggle game state pause or unpause
 window.addEventListener('keydown',(e)=>{
     setKey(e)
     if(e.key === ' '){
-        if(snakeObj.displayPause){
+        if(head.displayPause){
             console.log("unpaused")
-            snakeObj.start()
+            head.start()
         }
         else{
             console.log("pause")
-            snakeObj.stop()
+            head.stop()
         }
     }
 }) 
@@ -134,7 +130,7 @@ window.addEventListener('keydown',(e)=>{
 const gameBoard = ()=>{
     
     //if game is not paused check the coordinates of snake vs food and draw new foodObj if overlapping
-    if(!snakeObj.displayPause){
+    if(!head.displayPause){
         checkForFood()
         checkForTail()
     }
@@ -142,53 +138,53 @@ const gameBoard = ()=>{
     drawBoard()
     //move snake head in a direction based on input
     //if the up arrow key is pressed the snake head's coordinates will be decremented (go up) along the x-axis 
-    if(snakeObj.currentKey === 'ArrowUp'){
-        if(snakeObj.currentCoordinates.y === boardYStart){
-            // snakeObj.currentCoordinates.y = boardYStart + 275
-            snakeObj.dead()
+    if(head.currentKey === 'ArrowUp'){
+        if(head.currentCoordinates.y === boardYStart){
+            // head.currentCoordinates.y = boardYStart + 275
+            head.dead()
         }else{
 
-            snakeObj.currentCoordinates.y -= snakeObj.dy
+            head.currentCoordinates.y -= head.dy
         }
     }
     //if the right arrow key is pressed the snake head's coordinates will be incremented (go right) along the x-axis 
-    if(snakeObj.currentKey === 'ArrowRight'){
-        if(snakeObj.currentCoordinates.x === boardXStart + 275){
-            // snakeObj.currentCoordinates.x = boardXStart
-            snakeObj.dead()
+    if(head.currentKey === 'ArrowRight'){
+        if(head.currentCoordinates.x === boardXStart + 275){
+            // head.currentCoordinates.x = boardXStart
+            head.dead()
         }else{
-            snakeObj.currentCoordinates.x += snakeObj.dx
+            head.currentCoordinates.x += head.dx
         }
     }
     //if the down arrow key is pressed the snake head's coordinates will be incremented (go down) along the y-axis 
-    if(snakeObj.currentKey === 'ArrowDown'){
-        if(snakeObj.currentCoordinates.y === boardYStart + 275){
-            // snakeObj.currentCoordinates.y = boardYStart
-            snakeObj.dead()
+    if(head.currentKey === 'ArrowDown'){
+        if(head.currentCoordinates.y === boardYStart + 275){
+            // head.currentCoordinates.y = boardYStart
+            head.dead()
         }else{
-            snakeObj.currentCoordinates.y += snakeObj.dy
+            head.currentCoordinates.y += head.dy
         }
     }
     //if the left arrow key is pressed the snake head's coordinates will be decremented (go left) along the x-axis 
-    if(snakeObj.currentKey === 'ArrowLeft'){
-        if(snakeObj.currentCoordinates.x === boardXStart){
-            // snakeObj.currentCoordinates.x = boardXStart + 275
-            snakeObj.dead()
+    if(head.currentKey === 'ArrowLeft'){
+        if(head.currentCoordinates.x === boardXStart){
+            // head.currentCoordinates.x = boardXStart + 275
+            head.dead()
         }else{
-            snakeObj.currentCoordinates.x -= snakeObj.dx
+            head.currentCoordinates.x -= head.dx
         }
     }  
     // draws food object in a random location on the board
-    if(snakeObj.isDead === false){        
+    if(head.isDead === false){        
         // draws snake tail 
-        if(snakeObj.length >= 1) {            
+        if(head.length >= 1) {            
             tail.draw()  
         }
         foodObj.draw()
         // draws snake head
-        snakeObj.draw()
+        head.draw()
         // sets previousCoordinates to currentCoordinates AFTER drawing current frame
-        snakeObj.previousCoordinates = {...snakeObj.currentCoordinates}
+        head.previousCoordinates = {...head.currentCoordinates}
     }
 }
 
@@ -214,17 +210,20 @@ const getRandomCoordinates = () => {
 //checks snake coordinates against the food coordinates
 const checkForFood = () => {
     if(
-        snakeObj.currentCoordinates.x === foodObj.x && snakeObj.currentCoordinates.y === foodObj.y
+        head.currentCoordinates.x === foodObj.x && head.currentCoordinates.y === foodObj.y
     ){
         getRandomCoordinates()
-        snakeObj.length++ 
+        head.length++ 
     }
 }
 
 const checkForTail = () => {
     for(let i = 0; i < tail.tailArr.length; i++){
-        if(snakeObj.currentCoordinates.x === tail.tailArr[i].x && snakeObj.currentCoordinates.y === tail.tailArr[i].y){
-            return snakeObj.dead()
+        if(head.currentCoordinates.x === tail.tailArr[i].x && head.currentCoordinates.y === tail.tailArr[i].y){
+            head.isDead = true
+            head.displayPause = true
+            setTimeout(()=>{head.dead()}, 10)
+            break 
         }
     }
 }
@@ -236,21 +235,21 @@ const setKey = (key) => {
     }
     if(key.key === 'ArrowUp' || key.key === 'ArrowDown' || key.key === 'ArrowLeft' || key.key === 'ArrowRight'){
         key.preventDefault()
-        snakeObj.currentKey = key.key
+        head.currentKey = key.key
     }
 }
 
 //resets all parameters and draws a fresh board
 const resetBoard = async () => {
-    snakeObj.currentCoordinates.x = boardXStart
-    snakeObj.currentCoordinates.y = boardYStart
-    snakeObj.previousCoordinates.x = boardXStart
-    snakeObj.previousCoordinates.y = boardYStart
-    snakeObj.length = 0
-    snakeObj.currentKey = "ArrowDown"
-    snakeObj.displayPause = true
+    head.currentCoordinates.x = boardXStart
+    head.currentCoordinates.y = boardYStart
+    head.previousCoordinates.x = boardXStart
+    head.previousCoordinates.y = boardYStart
+    head.currentKey = "ArrowDown"
+    head.length = 0
+    head.displayPause = true
     tail.tailArr = []
-    c.clearRect(0,0,300,300)
+    c.clearRect(boardXStart, boardYStart, boardSize, boardSize)
     drawBoard()
-    snakeObj.draw()
+    head.draw()
 }
