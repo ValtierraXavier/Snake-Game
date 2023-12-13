@@ -135,11 +135,13 @@ const gameBoard = ()=>{
     
     //if game is not paused check the coordinates of snake vs food and draw new foodObj if overlapping
     if(!snakeObj.displayPause){
-        checkCoordinates()
+        checkForFood()
+        checkForTail()
     }
     //draw black board
     drawBoard()
     //move snake head in a direction based on input
+    //if the up arrow key is pressed the snake head's coordinates will be decremented (go up) along the x-axis 
     if(snakeObj.currentKey === 'ArrowUp'){
         if(snakeObj.currentCoordinates.y === boardYStart){
             // snakeObj.currentCoordinates.y = boardYStart + 275
@@ -149,6 +151,7 @@ const gameBoard = ()=>{
             snakeObj.currentCoordinates.y -= snakeObj.dy
         }
     }
+    //if the right arrow key is pressed the snake head's coordinates will be incremented (go right) along the x-axis 
     if(snakeObj.currentKey === 'ArrowRight'){
         if(snakeObj.currentCoordinates.x === boardXStart + 275){
             // snakeObj.currentCoordinates.x = boardXStart
@@ -157,6 +160,7 @@ const gameBoard = ()=>{
             snakeObj.currentCoordinates.x += snakeObj.dx
         }
     }
+    //if the down arrow key is pressed the snake head's coordinates will be incremented (go down) along the y-axis 
     if(snakeObj.currentKey === 'ArrowDown'){
         if(snakeObj.currentCoordinates.y === boardYStart + 275){
             // snakeObj.currentCoordinates.y = boardYStart
@@ -165,6 +169,7 @@ const gameBoard = ()=>{
             snakeObj.currentCoordinates.y += snakeObj.dy
         }
     }
+    //if the left arrow key is pressed the snake head's coordinates will be decremented (go left) along the x-axis 
     if(snakeObj.currentKey === 'ArrowLeft'){
         if(snakeObj.currentCoordinates.x === boardXStart){
             // snakeObj.currentCoordinates.x = boardXStart + 275
@@ -175,15 +180,14 @@ const gameBoard = ()=>{
     }  
     // draws food object in a random location on the board
     if(snakeObj.isDead === false){        
-        foodObj.draw()
-        // draws snake head
-        snakeObj.draw()
         // draws snake tail 
         if(snakeObj.length >= 1) {            
             tail.draw()  
         }
+        foodObj.draw()
+        // draws snake head
+        snakeObj.draw()
         // sets previousCoordinates to currentCoordinates AFTER drawing current frame
-        // makes a tail following effect.
         snakeObj.previousCoordinates = {...snakeObj.currentCoordinates}
     }
 }
@@ -208,10 +212,20 @@ const getRandomCoordinates = () => {
 }
 
 //checks snake coordinates against the food coordinates
-const checkCoordinates = () => {
-    if(snakeObj.currentCoordinates.x === foodObj.x && snakeObj.currentCoordinates.y === foodObj.y){
+const checkForFood = () => {
+    if(
+        snakeObj.currentCoordinates.x === foodObj.x && snakeObj.currentCoordinates.y === foodObj.y
+    ){
         getRandomCoordinates()
         snakeObj.length++ 
+    }
+}
+
+const checkForTail = () => {
+    for(let i = 0; i < tail.tailArr.length; i++){
+        if(snakeObj.currentCoordinates.x === tail.tailArr[i].x && snakeObj.currentCoordinates.y === tail.tailArr[i].y){
+            return snakeObj.dead()
+        }
     }
 }
 
