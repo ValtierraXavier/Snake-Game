@@ -1,0 +1,15 @@
+body{
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 100dvw;
+    height: 100dvh;
+}
+.selections {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 35px;
+}
