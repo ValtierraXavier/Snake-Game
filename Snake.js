@@ -1,30 +1,34 @@
 const canvas = document.getElementById("canvas")
-canvas.height = 300
-canvas.width = 300
+const canvasSize = document.getElementById('boardSize')
+const unitSize = document.getElementById('unitSize')
+const settings = document.getElementById('selections')
+let boardStart = 0
+let boardSize = 300
+canvas.height = boardSize
+canvas.width = boardSize
 c = canvas.getContext("2d")
 //the snake board (0,0 coordinates)
-const boardXStart = 0
-const boardYStart = 0
-const boardSize = 300
 //used to calculate the active board area with relation to the snake head size
 const divs = boardSize / 25
-const minX = (boardXStart)
-const maxX = (boardXStart + 275)
-const minY = (boardYStart)
-const maxY = (boardYStart + 275)
+const minX = (boardStart)
+const maxX = (boardStart + boardSize)
+const minY = (boardStart)
+const maxY = (boardStart + boardSize)
 let interval
 const blink = (ms) => {
-    return new Promise (resolve => setTimeout(()=>{resolve()}, ms))
+    return new Promise 
+    (resolve => setTimeout(()=>
+    {resolve()}, ms))
 }
 
 const head = {
     currentCoordinates: {
-        x: boardXStart,
-        y: boardYStart
+        x: boardStart,
+        y: boardStart
     },
     previousCoordinates:{
-        x: boardXStart,
-        y: boardYStart
+        x: boardStart,
+        y: boardStart
     },    
     size: 25,
     dx: 25,
@@ -41,6 +45,9 @@ const head = {
         },150)
         head.displayPause = false 
         head.isDead = false
+        settings.style.visibility = 'hidden'
+        settings.style.opacity = '0%'
+        canvas.focus()
     },
     // clears the draw interval
     stop: () => {
@@ -51,7 +58,19 @@ const head = {
     dead: async () => {
         head.isDead = true
         clearInterval(interval)
+        for(let i = 0; i < 10; i++){
+            await blink(300)
+            if(head.headColor === "red"){
+                head.headColor = 'black'
+                head.draw()
+            }else if(head.headColor === "black"){
+                head.headColor = 'red'
+                head.draw()
+            }
+        }
         resetBoard()
+        settings.style.visibility = 'visible'
+        settings.style.opacity = '100%'
     },
     draw: () => {
         c.beginPath()
@@ -91,8 +110,8 @@ const tail = {
 }
 
 const foodObj = {
-    x: boardXStart + 125,
-    y: boardYStart + 125,
+    x: boardStart + 125,
+    y: boardStart + 125,
     size: 25,
     dx: 25,
     dy: 25,
@@ -109,6 +128,7 @@ const foodObj = {
 window.addEventListener('DOMContentLoaded',()=>{
     drawBoard()
     head.draw()
+    canvas.focus()
 })
 
 //detect space bar and toggle game state pause or unpause
@@ -128,7 +148,6 @@ window.addEventListener('keydown',(e)=>{
 
 //handle game functions
 const gameBoard = ()=>{
-    
     //if game is not paused check the coordinates of snake vs food and draw new foodObj if overlapping
     if(!head.displayPause){
         checkForFood()
@@ -139,8 +158,8 @@ const gameBoard = ()=>{
     //move snake head in a direction based on input
     //if the up arrow key is pressed the snake head's coordinates will be decremented (go up) along the x-axis 
     if(head.currentKey === 'ArrowUp'){
-        if(head.currentCoordinates.y === boardYStart){
-            // head.currentCoordinates.y = boardYStart + 275
+        if(head.currentCoordinates.y === boardStart){
+            // head.currentCoordinates.y = boardStart + 275
             head.dead()
         }else{
 
@@ -149,8 +168,8 @@ const gameBoard = ()=>{
     }
     //if the right arrow key is pressed the snake head's coordinates will be incremented (go right) along the x-axis 
     if(head.currentKey === 'ArrowRight'){
-        if(head.currentCoordinates.x === boardXStart + 275){
-            // head.currentCoordinates.x = boardXStart
+        if(head.currentCoordinates.x === boardStart + (boardSize - head.size) ){
+            // head.currentCoordinates.x = boardStart
             head.dead()
         }else{
             head.currentCoordinates.x += head.dx
@@ -158,8 +177,8 @@ const gameBoard = ()=>{
     }
     //if the down arrow key is pressed the snake head's coordinates will be incremented (go down) along the y-axis 
     if(head.currentKey === 'ArrowDown'){
-        if(head.currentCoordinates.y === boardYStart + 275){
-            // head.currentCoordinates.y = boardYStart
+        if(head.currentCoordinates.y === boardStart + (boardSize - head.size)){
+            // head.currentCoordinates.y = boardStart
             head.dead()
         }else{
             head.currentCoordinates.y += head.dy
@@ -167,8 +186,8 @@ const gameBoard = ()=>{
     }
     //if the left arrow key is pressed the snake head's coordinates will be decremented (go left) along the x-axis 
     if(head.currentKey === 'ArrowLeft'){
-        if(head.currentCoordinates.x === boardXStart){
-            // head.currentCoordinates.x = boardXStart + 275
+        if(head.currentCoordinates.x === boardStart){
+            // head.currentCoordinates.x = boardStart + 275
             head.dead()
         }else{
             head.currentCoordinates.x -= head.dx
@@ -190,20 +209,20 @@ const gameBoard = ()=>{
 
 //draws a fresh board 
 const drawBoard = () => {
-    c.clearRect(boardXStart, boardYStart, canvas.width, canvas.height)
+    c.clearRect(boardStart, boardStart, boardSize, boardSize)
     c.beginPath()
     c.fillStyle = 'black'
-    c.fillRect(boardXStart, boardYStart, boardSize, boardSize)
+    c.fillRect(boardStart, boardStart, boardSize, boardSize)
     c.stroke()
 }
 
 //gets random coordinates to draw food object in a random location on the board
 const getRandomCoordinates = () => {
-    c.clearRect(foodObj.x, foodObj.y, 25, 25)
+    c.clearRect(foodObj.x, foodObj.y, head.size, head.size)
     const randomXMultiplier = Math.floor(Math.random() * divs)
     const randomYMultiplier = Math.floor(Math.random() * divs)
-    foodObj.x = randomXMultiplier * 25
-    foodObj.y = randomYMultiplier * 25
+    foodObj.x = randomXMultiplier * head.size
+    foodObj.y = randomYMultiplier * head.size
     foodObj.draw()
 }
 
@@ -239,17 +258,26 @@ const setKey = (key) => {
     }
 }
 
+
+
 //resets all parameters and draws a fresh board
 const resetBoard = async () => {
-    head.currentCoordinates.x = boardXStart
-    head.currentCoordinates.y = boardYStart
-    head.previousCoordinates.x = boardXStart
-    head.previousCoordinates.y = boardYStart
+    head.currentCoordinates.x = boardStart
+    head.currentCoordinates.y = boardStart
+    head.previousCoordinates.x = boardStart
+    head.previousCoordinates.y = boardStart
     head.currentKey = "ArrowDown"
     head.length = 0
     head.displayPause = true
     tail.tailArr = []
-    c.clearRect(boardXStart, boardYStart, boardSize, boardSize)
+    c.clearRect(boardStart, boardStart, boardSize, boardSize)
     drawBoard()
     head.draw()
 }
+const selectSizes = (e)=>{
+    boardSize = Number(e.target.value)
+    canvas.height = Number(e.target.value)
+    canvas.width = Number(e.target.value)
+    setTimeout(()=>{drawBoard()},200)
+}
+canvasSize.onchange = (e)=>{selectSizes(e)}
