@@ -1,18 +1,19 @@
 const canvas = document.getElementById("canvas")
+c = canvas.getContext("2d")
 const canvasSize = document.getElementById('boardSize')
 const unitSize = document.getElementById('unitSize')
 const settings = document.getElementById('selectionsDiv')
 const counter = document.getElementById('counter')
+const counterSection = document.getElementById('counterSection')
 let boardStart = 0
-let boardSize = 300
-canvas.height = boardSize
-canvas.width = boardSize
-c = canvas.getContext("2d")
+let boardSize = Number(canvasSize.value)
+canvas.height = Number(canvasSize.value)
+canvas.width = Number(canvasSize.value)
 //the snake board (0,0 coordinates)
 const minX = (boardStart)
-const maxX = (boardStart + boardSize)
+const maxX = (boardSize)
 const minY = (boardStart)
-const maxY = (boardStart + boardSize)
+const maxY = (boardSize)
 let interval
 const blink = (ms) => {
     return new Promise 
@@ -29,9 +30,9 @@ const head = {
         x: boardStart,
         y: boardStart
     },    
-    size: 25,
-    dx: 25,
-    dy: 25,
+    size: Number(unitSize.value),
+    dx: Number(unitSize.value),
+    dy: Number(unitSize.value),
     length: 0,
     currentKey: 'ArrowDown',
     displayPause: true,
@@ -40,7 +41,8 @@ const head = {
     speed: 150,
     // starts the interval calls to draw the board
     start: () => {
-        // getRandomCoordinates()
+        getRandomCoordinates()
+        resetBoard()
         head.displayPause = false 
         head.isDead = false
         settings.style.visibility = 'hidden'
@@ -60,7 +62,7 @@ const head = {
         head.isDead = true
         clearInterval(interval)
         for(let i = 0; i < 10; i++){
-            await blink(300)
+            await blink(250)
             if(head.headColor === "red"){
                 head.headColor = 'black'
                 head.draw()
@@ -111,8 +113,10 @@ const tail = {
 }
 
 const food = {
-    x: boardStart + (Math.floor(Math.random() * (boardSize / head.size)) * head.size),
-    y: boardStart + (Math.floor(Math.random() * (boardSize / head.size)) * head.size),
+    // initial coordinates set to a random number within the game board at an interval of the head.size
+    //fix this when ypu open this again. learge board and large head coordinates to not overlap.
+    x: boardSize,
+    y: boardSize,
     size: head.size,
     dx: head.size,
     dy: head.size,
@@ -127,10 +131,15 @@ const food = {
 }
 //Draw the board on initial load
 window.addEventListener('DOMContentLoaded',()=>{
-    drawBoard()
-    head.draw()
-    canvas.focus()
-    canvas.scrollTo()
+    settings.style.opacity = '0%'
+    counterSection.style.opacity = '0%'
+    setTimeout(()=>{
+        drawBoard()
+        head.draw()
+        canvas.focus()
+        settings.style.opacity = '100%'
+        counterSection.style.opacity = '100%'
+    },200)
 })
 
 //detect space bar and toggle game state pause or unpause
@@ -201,6 +210,7 @@ const gameBoard = ()=>{
         if(head.length >= 1) {            
             tail.draw()  
         }
+        // draws food object
         food.draw()
         // draws snake head
         head.draw()
@@ -255,6 +265,7 @@ const checkForTail = () => {
 //sets what arrowkey was press for snake head direction
 const setKey = (key) => {
     if(key.key === ' '){
+        key.preventDefault()
         return
     }
     if(key.key === 'ArrowUp' || key.key === 'ArrowDown' || key.key === 'ArrowLeft' || key.key === 'ArrowRight'){

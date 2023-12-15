@@ -15,7 +15,7 @@ body{
     height: 300px;
     z-index: 200;
     visibility: visible;
-    opacity: 100%;
+    opacity: 0%;
     flex-flow: row nowrap;
     justify-content: space-evenly;
     align-items: center;
