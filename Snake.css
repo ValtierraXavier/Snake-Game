@@ -5,8 +5,10 @@ body{
     align-items: center;
     width: 100dvw;
     height: 100dvh;
+    margin:0;
+    padding:0;
 }
-.selections {
+#selectionsDiv {
     display: flex;
     position: absolute;
     width: 300px;
@@ -21,4 +23,21 @@ body{
     border-radius: 5px;
     transition: .3s opacity ease .2s;
     color: white;
+}
+
+#canvasDiv{
+    position: relative;
+   
+}
+
+#counterSection{
+    display: flex;
+    position:relative;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+}
+#counter{ 
+    position: relative;   
+    left: 5px;
 }
