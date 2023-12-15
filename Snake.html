@@ -5,22 +5,29 @@
         <meta name="veiwport" content="width=device-width, initial-scale=1.0">
         <title>Classic Snake</title>
         <link rel="stylesheet" href="./Snake.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     </head>
     <body>
         <section class="gameArea" id="GameArea">
             <div id='selectionsDiv'>
-                <label for="boardSize">Board Size</label>
-                <select name="boardSize" id="boardSize" class="boardSizeSelection">
-                    <option value=300>Small</option>
-                    <option value=500>Medium</option>
-                    <option value=600>Large</option>
-                </select>
-                <label for="unitSize">Snake Size</label>
-                <select name="unitSize" id="unitSize" class="unitSizeSelection">
-                    <option value="25">Small</option>
-                    <option value="50">Medium</option>
-                    <option value="100">Large</option>
-                </select>
+                <div>
+                    <label for="boardSize">Board Size</label>
+                    <select name="boardSize" id="boardSize" class="boardSizeSelection">
+                        <option value=300>Small</option>
+                        <option value=500>Medium</option>
+                        <option value=700>Large</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="unitSize">Snake Size</label>
+                    <select name="unitSize" id="unitSize" class="unitSizeSelection">
+                        <option value="25">Small</option>
+                        <option value="50">Medium</option>
+                        <option value="100">Large</option>
+                    </select>
+                </div>
             </div>
             <div id='canvasDiv'>
                 <canvas id="canvas"></canvas>
