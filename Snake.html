@@ -11,13 +11,14 @@
     </head>
     <body>
         <section class="gameArea" id="GameArea">
+            <div id="pauseDisplay">Press Spacebar to Start</div>
             <div id='selectionsDiv'>
                 <div>
                     <label for="boardSize">Board Size</label>
                     <select name="boardSize" id="boardSize" class="boardSizeSelection">
                         <option value=300>Small</option>
                         <option value=500>Medium</option>
-                        <option value=700>Large</option>
+                        <option value=600>Large</option>
                     </select>
                 </div>
                 <div>
@@ -26,6 +27,13 @@
                         <option value="25">Small</option>
                         <option value="50">Medium</option>
                         <option value="100">Large</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="wall">Fatal Edge</label>
+                    <select id="wall" name="wall">
+                        <option value='true'>Fatal</option>
+                        <option value='false'>Warp</option>
                     </select>
                 </div>
             </div>

@@ -15,16 +15,25 @@ body{
     font-size: small;
 }
 
+label{
+    text-align: center;
+}
+
+#pauseDisplay{
+    opacity: 100%;
+    transition: opacity .2s ease-in-out
+}
+
 #selectionsDiv {
     display: flex;
     position: absolute;
     width: 300px;
     height: 300px;
-    z-index: 200;
+    z-index: 300;
     visibility: visible;
     opacity: 0%;
     flex-flow: row nowrap;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
     background-color:rgba(50,50,50,.3); 
     border-radius: 5px;
@@ -52,7 +61,7 @@ body{
 #selectionsDiv > div{
     display: flex;
     flex-flow: column nowrap;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: space-around;
     height: 20px;
 }
