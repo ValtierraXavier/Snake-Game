@@ -65,3 +65,13 @@ label{
     align-items: space-around;
     height: 20px;
 }
+
+#highScore{
+    display: flex;
+    flex-flow: row nowrap;
+}
+.letters{
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+}

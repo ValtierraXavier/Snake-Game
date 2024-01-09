@@ -42,6 +42,7 @@ const head = {
     paused: false,
     displayPause: true,
     initial: true,
+    highScore: true,
     isDead: false,
     headColor: "red",
     speed: 150,
@@ -309,6 +310,9 @@ const setKey = (key) => {
     }
     if(key.key === 'ArrowUp' || key.key === 'ArrowDown' || key.key === 'ArrowLeft' || key.key === 'ArrowRight'){
         key.preventDefault()
+        if(head.displayPause && head.highScore){
+            highScore(key.key)   
+        }
         if(head.paused || head.displayPause || head.initial){
             return
         }else{
@@ -364,3 +368,100 @@ wallSettings.onchange = (e)=>{selectSizes(e)}
 // next steps add database to save highscores
 // add display for "Paused" with snake head blinking (no food, no tail)
 // add css and title. 
+
+const lettersArr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","!","@","#","$","%","^","&","*","(",")","_","-","+","-"]
+const letters = document.getElementsByClassName("letters")
+const lettersMap = new Map()
+for(let i = 0; i < lettersArr.length; i++){
+    lettersMap.set(i, lettersArr[i])
+}
+
+let col = 0;
+const highScore = (key) => { 
+    let colIndex = col
+    let letterIndex = Number(letters[col].dataset.count)
+
+    if(key == 'ArrowUp'){
+        if(letterIndex == lettersArr.length -1){
+            letterIndex = 0
+        }else{
+            letterIndex++
+        }
+    }else if(key == "ArrowDown"){
+        if(letterIndex == 0){
+            letterIndex = lettersArr.length - 1
+        }else{
+            letterIndex--
+        }
+    }else if(key == "ArrowRight"){
+        if(colIndex == letters.length -1){
+            colIndex = 0
+        }else{
+            colIndex++
+        }
+    }else if(key == "ArrowLeft"){
+        if(colIndex == 0){
+            colIndex = letters.length -1
+        }else{
+            colIndex--
+        }
+    }
+    letters[col].dataset.count = letterIndex
+    col = colIndex
+
+    columnControl()
+}
+
+const columnControl = () => {
+    
+    for(let i = 0; i < letters.length; i++){
+        if(col == i){
+            letters[i].style.color = 'green'
+            letters[i].innerHTML = `${lettersMap.get(Number(letters[i].dataset.count))}`
+        }else{
+            letters[i].style.color = 'black'
+        }   
+    }
+}
+columnControl() 
+
+class HighScoreArr{
+    constructor(){
+        this.highScoreArr = []
+    }
+    add(score, name){
+        let HS = new HighScore(score, name)
+     if(this.highScoreArr.length == 10){
+            this.highScoreArr.pop()
+        }
+        this.highScoreArr.unshift(HS)
+        return HS
+    }
+    print(){
+        return(this.highScoreArr)
+    }
+    checkScore(){
+        let currentScore = 0
+        let highScore = 0
+        for(let i = 0; i < highScoreArr.length; i++){
+            if(highScoreArr[i].score > currentScore){
+                highScore = highScoreArr[i].score
+            }
+        }
+    }
+}
+class HighScore {
+    constructor(score, name){
+        this.score = score
+        this.name = name
+    }
+}
+let otherArr =[]
+let highScores = new HighScoreArr()
+for(let j = 0; j < 15; j++){
+    let score = Math.floor(Math.random() * 10)
+    let name = `name${j}`
+    highScores.add(score, name)
+    otherArr.push({name, score})
+}
+console.log(highScores.print(), otherArr)
