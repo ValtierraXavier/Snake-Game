@@ -43,7 +43,7 @@ const head = {
     paused: false,
     displayPause: true,
     initial: true,
-    highScore: true,
+    highScore: false,
     isDead: false,
     headColor: "red",
     speed: 150,
@@ -101,14 +101,27 @@ const head = {
     },
     
     //resets the board and clears the draw interval
+    isHiscore: async (n) => {
+        try{
+            const res = await fetch("http://localhost:3020/score/get/highest")
+            const data = await res.json()
+            if(n >= data[0]?.score){
+                return true
+            }else{
+                return false
+            }
+        }catch(error){console.log(error.message)}
+    },
+
     dead: async () => {
         pauseDisplay.innerHTML = "Dead, Awww"
         head.isDead = true  
         head.displayPause = true   
-        head.currentScore = head.length   
+        head.currentScore = head.length  
+        head.highScore = await head.isHiscore(head.length) 
         clearInterval(interval) 
         for(let i = 0; i < 10; i++){
-            await blink(250)
+            await blink(350)
             if(head.headColor === "red"){
                 head.headColor = 'black'
                 head.draw()
@@ -117,9 +130,9 @@ const head = {
                 head.draw()
             }
         }
-        resetBoard()
         settings.style.visibility = 'visible'
         settings.style.opacity = '100%'
+        resetBoard()
     },
     draw: () => {
         c.beginPath()
@@ -328,7 +341,9 @@ const setKey = (key) => {
 
 //resets all parameters and draws a fresh board
 const resetBoard = async () => {
-    resetHiScrSelect()
+    if(head.highScore == false){        
+        resetHiScrSelect()
+    }
     head.currentCoordinates.x = boardStart
     head.currentCoordinates.y = boardStart
     head.previousCoordinates.x = boardStart
@@ -388,6 +403,7 @@ const resetHiScrSelect = () => {
         letters[i].innerHTML = 'A'
     }
     highScore()
+    head.highScore = false
 }
 
 let col = 0;
@@ -456,7 +472,7 @@ const handleName = async () => {
               },
             body: JSON.stringify(body)
         })
-        console.log(await response.json())
+        resetHiScrSelect()
     }catch(error){console.log(error.message)}
 }
 
