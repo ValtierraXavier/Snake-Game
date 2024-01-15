@@ -1,12 +1,8 @@
-/* @font-face {
-    font-family:"press start 2p";
-    src: url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-} */
 body{
     display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
+    flex-flow: row nowrap;
     align-items: center;
+    justify-content: center;
     width: 100dvw;
     height: 100dvh;
     margin:0;
@@ -41,11 +37,6 @@ label{
     color: white;
 }
 
-#canvasDiv{
-    position: relative;
-   
-}
-
 #counterSection{
     display: flex;
     position:relative;
@@ -55,7 +46,7 @@ label{
 }
 #counter{ 
     position: relative;   
-    left: 5px;
+    /* left: 5px; */
 }
 
 #selectionsDiv > div{
@@ -69,9 +60,48 @@ label{
 #highScore{
     display: flex;
     flex-flow: row nowrap;
+    justify-content: center;
 }
 .letters{
     margin: 0px;
     padding: 0px;
     text-align: center;
+}
+
+#label{
+    margin-bottom: 5px;
+    text-decoration: underline;
+}
+
+#output{
+    z-index: 900;
+    position: relative;
+    display: flex;
+    flex-flow: column nowrap;
+    overflow-y: auto;
+    height: 40dvh;
+    width: 20dvh;
+    font-size: 8px;
+}
+
+.chars{
+    display: flex;
+    flex-flow: column nowrap;
+    text-align: center;
+}
+
+#score{
+    border: solid black 2px;
+    border-radius: 3px;
+    margin-bottom: 5px;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+#highscoresDiv{
+    display: flex;
+    flex-flow: column nowrap;
+    text-align: center;    
+    position: fixed;
+    left: 10px;
 }

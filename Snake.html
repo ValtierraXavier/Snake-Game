@@ -10,17 +10,39 @@
         <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     </head>
     <body>
-        <section class="gameArea" id="GameArea">
-            <div id="pauseDisplay">Press Spacebar to Start</div>
-            <div id='selectionsDiv'>
-                <div>
-                    <label for="boardSize">Board Size</label>
-                    <select name="boardSize" id="boardSize" class="boardSizeSelection">
-                        <option value=300>Small</option>
-                        <option value=500>Medium</option>
-                        <option value=600>Large</option>
-                    </select>
+            <aside id="highscoresDiv">
+                <div id="label">HighScores</div>
+                <div id="output"></div>                
+            </aside>
+            <section id="highScore">
+                <div class="chars" id="char1">
+                    <div id="upButton">🔼</div>
+                    <p class="letters" id="letter1" data-count = 0>A</p>
+                    <div id="downButton">🔽</div>
                 </div>
+                <div class="chars" id="char2">
+                    <div id="upButton">🔼</div>
+                    <p class="letters" id="letter2" data-count=0>A</p>
+                    <div id="downbutton">🔽</div>
+                    
+                </div>
+                <div class="chars" id="char3">
+                    <div id="upButton">🔼</div>
+                    <p class="letters" id="letter3" data-count=0>A</p>
+                    <div id="downbutton">🔽</div>
+                </div>
+            </section>
+            <section class="gameArea" id="GameArea">
+                <div id="pauseDisplay">Press Spacebar to Start</div>
+                <div id='selectionsDiv'>
+                    <div>
+                        <label for="boardSize">Board Size</label>
+                        <select name="boardSize" id="boardSize" class="boardSizeSelection">
+                            <option value=300>Small</option>
+                            <option value=500>Medium</option>
+                            <option value=600>Large</option>
+                        </select>
+                    </div>
                 <div>
                     <label for="unitSize">Snake Size</label>
                     <select name="unitSize" id="unitSize" class="unitSizeSelection">
@@ -40,29 +62,12 @@
             <div id='canvasDiv'>
                 <canvas id="canvas"></canvas>
             </div>
+            <section id="counterSection">
+                Food Eaten:<h3 id="counter"> 0</h3>
+            </section>
         </section>
-        <section id="counterSection">
-            Food Eaten:<h3 id="counter"> 0</h3>
-        </section>
-        <section id="highScore">
-            <div class="chars" id="char1">
-                <div id="upButton">🔼</div>
-                <p class="letters" id="letter1" data-count = 0>A</p>
-                <div id="downButton">🔽</div>
-            </div>
-            <div class="chars" id="char2">
-                <div id="upButton">🔼</div>
-                <p class="letters" id="letter2" data-count=0>A</p>
-                <div id="downbutton">🔽</div>
-                
-            </div>
-            <div class="chars" id="char3">
-                <div id="upButton">🔼</div>
-                <p class="letters" id="letter3" data-count=0>A</p>
-                <div id="downbutton">🔽</div>
-
-            </div>
-        </section>
+    
+        
     </body>
     <script src="./Snake.js"></script>
 </html>

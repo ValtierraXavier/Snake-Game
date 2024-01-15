@@ -7,6 +7,7 @@ const settings = document.getElementById('selectionsDiv')
 const counter = document.getElementById('counter')
 const counterSection = document.getElementById('counterSection')
 const pauseDisplay = document.getElementById('pauseDisplay')
+const out = document.getElementById('output')
 let wallDeath = 'true'
 let boardStart = 0
 let boardSize = Number(canvasSize.value)
@@ -59,18 +60,21 @@ const head = {
         interval = setInterval(
             () => {gameBoard()
         },head.speed)
-        pauseDisplay.innerHTML = 'Playing'
+        // pauseDisplay.innerHTML = 'Playing'
     },
     // clears the draw interval
     stop: () => {
         clearInterval(interval);
     },
+    //sets a new draw interval
     resume: () => {
         interval = setInterval(()=>{
             gameBoard()
         },head.speed)
 
     },
+
+    //Clears the interval and flashes the snake head object
     pause: () => {
         if(head.paused == false && head.initial == false){
             head.paused = true
@@ -95,12 +99,12 @@ const head = {
             clearInterval(blinker)
             head.paused = false
             head.resume()
-            pauseDisplay.innerHTML = 'Playing'
+            // pauseDisplay.innerHTML = 'Playing'
             // pauseDisplay.style.opacity = '0%'
         }
     },
     
-    //resets the board and clears the draw interval
+    //Checks if the score (n) is higher than the current high score stored in the data base.
     isHiscore: async (n) => {
         try{
             const res = await fetch("http://localhost:3020/score/get/highest")
@@ -112,13 +116,17 @@ const head = {
             }
         }catch(error){console.log(error.message)}
     },
-
+    //What to do when the snake dies.
+    //Resets the board and clears the draw interval
     dead: async () => {
         pauseDisplay.innerHTML = "Dead, Awww"
         head.isDead = true  
         head.displayPause = true   
         head.currentScore = head.length  
         head.highScore = await head.isHiscore(head.length) 
+        if(head.highScore){
+            openSetHighScore()
+        }
         clearInterval(interval) 
         for(let i = 0; i < 10; i++){
             await blink(350)
@@ -134,23 +142,14 @@ const head = {
         settings.style.opacity = '100%'
         resetBoard()
     },
+    //Draws the snake head object on the canvas.
     draw: () => {
         c.beginPath()
         c.fillStyle = `${head.headColor}`
         c.fillRect(head.currentCoordinates.x, head.currentCoordinates.y, head.size, head.size)
         c.stroke()
     },  
-    checkForFood: () => {
-        if(head.currentCoordinates.x == food.x && head.currentCoordinates.y == food.y){
-            head.length++
-            counter.innerHTML = head.length
-            food.getRandomCoordinates()
-            drawBoard()
-            food.draw()
-            tail.draw
-            head.draw()
-        }
-    }
+   
 }
 
 const tail = {
@@ -218,7 +217,22 @@ const food = {
         food.y = randomYMultiplier * head.size
         food.draw()
     },
+     //Checks if the Snake head object is being drawn on the same coordinates.
+    //Randomizes the food object's current position; draws food object.
+    checkForFood: async() => {
+        if(head.currentCoordinates.x == food.x && head.currentCoordinates.y == food.y){
+            head.length++
+            counter.innerHTML = head.length
+            food.getRandomCoordinates()
+            drawBoard()
+            food.draw()
+            tail.draw
+            head.draw()
+            head.highScore = await head.isHiscore(head.length)
+        }
+    }
 }
+
 
 //Draw the board on initial load
 window.addEventListener('DOMContentLoaded',()=>{
@@ -237,9 +251,10 @@ window.addEventListener('DOMContentLoaded',()=>{
 const gameBoard = ()=>{
     //if game is not paused check the coordinates of snake vs food and draw new food if overlapping
     if(!head.displayPause){
-        head.checkForFood()
+        food.checkForFood()
         tail.checkForTail()
     }
+    pauseDisplay.innerHTML = head.highScore? `New High Score!!`: `Playing`
     //draw black board
     drawBoard()
     //move snake head in a direction based on input
@@ -317,7 +332,9 @@ window.addEventListener('keydown',(e)=>{
 const setKey = (key) => {
     if(key.key === ' '){
         key.preventDefault()
-        if(head.initial == true){
+        if(head.isDead){
+            return
+        }if(head.initial){
             head.start()
         }else{
             head.pause()
@@ -350,6 +367,8 @@ const resetBoard = async () => {
     head.previousCoordinates.y = boardStart
     head.paused = false
     head.initial = true
+    head.isDead = false
+    // head.highScore= false
     head.displayPause = true
     head.currentKey = "ArrowDown"
     head.length = 0
@@ -395,15 +414,6 @@ const lettersArr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O",
 const lettersMap = new Map()
 for(let i = 0; i < lettersArr.length; i++){
     lettersMap.set(i, lettersArr[i])
-}
-
-const resetHiScrSelect = () => {
-    for(let i = 0; i < letters.length; i++){
-        letters[i].dataset.count = 0
-        letters[i].innerHTML = 'A'
-    }
-    highScore()
-    head.highScore = false
 }
 
 let col = 0;
@@ -454,7 +464,6 @@ const columnControl = () => {
         }   
     }
 }
-highScore()
  
 const handleName = async () => {
     let name = `${letters[0].innerHTML}${letters[1].innerHTML}${letters[2].innerHTML}`
@@ -476,6 +485,42 @@ const handleName = async () => {
     }catch(error){console.log(error.message)}
 }
 
+const selectDiv = document.getElementById('highScore')
+
+const fetchData = async () => {
+    let data
+    try{
+        selectDiv.style.opacity = '0%'
+        let res = await fetch('http://localhost:3020/score/get')
+        data = await res.json()
+        // console.log(data[0].highScores)
+    }catch(error){console.log(error.message)}
+
+    out.innerHTML = data[0].highScores.map((el) =>
+        `
+        <div id="score">
+            <p id="scoreName">Name: ${el.name}</p>
+            <p id="scoreValue">Score: ${el.score}</p>
+        </div>
+        `
+    ).join("")
+}
+
+const resetHiScrSelect = () => {
+    for(let i = 0; i < letters.length; i++){
+        letters[i].dataset.count = 0
+        letters[i].innerHTML = 'A'
+    }
+    highScore()
+    fetchData()
+    head.highScore = false
+}
+
+const openSetHighScore = () => {
+    selectDiv.style.opacity = '100%'
+
+}
+fetchData()
 // class HighScoreArr{
 //     constructor(){
 //         this.scoreArr = new Array(10)
