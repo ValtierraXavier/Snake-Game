@@ -7,7 +7,6 @@ const settings = document.getElementById('selectionsDiv')
 const counter = document.getElementById('counter')
 const counterSection = document.getElementById('counterSection')
 const pauseDisplay = document.getElementById('pauseDisplay')
-const out = document.getElementById('output')
 let wallDeath = 'true'
 let boardStart = 0
 let boardSize = Number(canvasSize.value)
@@ -58,9 +57,8 @@ const head = {
         settings.style.opacity = '0%'
         settings.style.visibility = 'hidden'
         interval = setInterval(
-            () => {gameBoard()
+            () => {game()
         },head.speed)
-        // pauseDisplay.innerHTML = 'Playing'
     },
     // clears the draw interval
     stop: () => {
@@ -69,7 +67,7 @@ const head = {
     //sets a new draw interval
     resume: () => {
         interval = setInterval(()=>{
-            gameBoard()
+            game()
         },head.speed)
 
     },
@@ -99,8 +97,6 @@ const head = {
             clearInterval(blinker)
             head.paused = false
             head.resume()
-            // pauseDisplay.innerHTML = 'Playing'
-            // pauseDisplay.style.opacity = '0%'
         }
     },
     
@@ -111,7 +107,7 @@ const head = {
             const data = await res.json()
             if(n >= data[0]?.score){
                 return true
-            }else{
+            }else if (data){
                 return false
             }
         }catch(error){console.log(error.message)}
@@ -125,7 +121,7 @@ const head = {
         head.currentScore = head.length  
         head.highScore = await head.isHiscore(head.length) 
         if(head.highScore){
-            openSetHighScore()
+            handleHighScore.open()
         }
         clearInterval(interval) 
         for(let i = 0; i < 10; i++){
@@ -248,7 +244,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 })
 
 //handle game functions
-const gameBoard = ()=>{
+const game = ()=>{
     //if game is not paused check the coordinates of snake vs food and draw new food if overlapping
     if(!head.displayPause){
         food.checkForFood()
@@ -343,7 +339,7 @@ const setKey = (key) => {
     if(key.key === 'ArrowUp' || key.key === 'ArrowDown' || key.key === 'ArrowLeft' || key.key === 'ArrowRight' || key.key === "Enter"){
         key.preventDefault()
         if(head.displayPause && head.highScore){
-            highScore(key.key)   
+            handleHighScore.charControl(key.key)   
         }
         if(head.paused || head.displayPause || head.initial){
             return
@@ -359,7 +355,7 @@ const setKey = (key) => {
 //resets all parameters and draws a fresh board
 const resetBoard = async () => {
     if(head.highScore == false){        
-        resetHiScrSelect()
+        handleHighScore.reset()
     }
     head.currentCoordinates.x = boardStart
     head.currentCoordinates.y = boardStart
@@ -410,171 +406,127 @@ wallSettings.onchange = (e)=>{selectSizes(e)}
 // add css and title.: Blank
 
 const letters = document.getElementsByClassName("letters")
-const lettersArr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","!","@","#","$","%","^","&","*","(",")","_","-","+","-"]
+const selectDiv = document.getElementById('highScore')
+const out = document.getElementById('output')
+const lettersArr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W"
+,"X","Y","Z","!","@","#","$","%","^","&","*","(",")","_","-","+","-"]
 const lettersMap = new Map()
 for(let i = 0; i < lettersArr.length; i++){
     lettersMap.set(i, lettersArr[i])
 }
 
 let col = 0;
-const highScore = (key) => { 
-    let colIndex = col
-    let letterIndex = Number(letters[col].dataset.count)
 
-    if(key == 'ArrowUp'){
-        if(letterIndex == lettersArr.length -1){
-            letterIndex = 0
-        }else{
-            letterIndex++
-        }
-    }else if(key == "ArrowDown"){
-        if(letterIndex == 0){
-            letterIndex = lettersArr.length - 1
-        }else{
-            letterIndex--
-        }
-    }else if(key == "ArrowRight"){
-        if(colIndex == letters.length -1){
-            colIndex = 0
-        }else{
-            colIndex++
-        }
-    }else if(key == "ArrowLeft"){
-        if(colIndex == 0){
-            colIndex = letters.length -1
-        }else{
-            colIndex--
-        }
-    }else if(key === 'Enter'){
-        handleName()
-    }
-    letters[col].dataset.count = letterIndex
-    col = colIndex
-
-    columnControl()
-}
-
-const columnControl = () => {
-    for(let i = 0; i < letters.length; i++){
-        if(col == i){
-            letters[i].style.color = 'green'
-            letters[i].innerHTML = `${lettersMap.get(Number(letters[i].dataset.count))}`
-        }else{
-            letters[i].style.color = 'black'
-        }   
-    }
-}
  
-const handleName = async () => {
-    let name = `${letters[0].innerHTML}${letters[1].innerHTML}${letters[2].innerHTML}`
-    let score = head.currentScore
-    let body = {
+const handleHighScore = {
+
+    add: async ()=>{
+        let name = `${letters[0].innerHTML}${letters[1].innerHTML}${letters[2].innerHTML}`
+        let score = head.currentScore
+        let body = {
         name,
         score
-    }
-    try{
+        }
+        try{
         const response = await fetch ('http://localhost:3020/score/add', {
             method: 'post',
             mode: 'cors',
             headers: {
                 "Content-Type": "application/json",
-              },
+            },
             body: JSON.stringify(body)
         })
-        resetHiScrSelect()
-    }catch(error){console.log(error.message)}
-}
+        handleHighScore.reset()
+        }catch(error){console.log(error.message)}
+    },
 
-const selectDiv = document.getElementById('highScore')
+    get: async ()=>{
+        let data
+        try{
+            selectDiv.style.opacity = '0%'
+            let res = await fetch('http://localhost:3020/score/get')
+            data = await res.json()
+        }catch(error){console.log(error.message)}
 
-const fetchData = async () => {
-    let data
-    try{
+        out.innerHTML = !data[0]? "No Highscore...yet" : data[0].highScores.map((el) =>
+            `
+            <div id="score">
+                <p id="scoreName">Name: ${el.name}</p>
+                <p id="scoreValue">Score: ${el.score}</p>
+            </div>
+            `
+        ).join("")
+    },
+
+    reset: () => {
+        for(let i = 0; i < letters.length; i++){
+            letters[i].dataset.count = 0
+            letters[i].innerHTML = 'A'
+        }
+        handleHighScore.charControl()
+        handleHighScore.get()
+        head.highScore = false
+    }, 
+    open: () => {
+        selectDiv.style.opacity = '100%'
+        selectDiv.style.visibility = 'visible'
+        settings. style.opcaity = '0%'
+        handleHighScore.columnControl()
+        
+    },
+    
+    close: () => {
         selectDiv.style.opacity = '0%'
-        let res = await fetch('http://localhost:3020/score/get')
-        data = await res.json()
-        // console.log(data[0].highScores)
-    }catch(error){console.log(error.message)}
+        selectDiv.style.visibility = 'hidden'
+        settings. style.opcaity = '100%'
+    },
 
-    out.innerHTML = data[0].highScores.map((el) =>
-        `
-        <div id="score">
-            <p id="scoreName">Name: ${el.name}</p>
-            <p id="scoreValue">Score: ${el.score}</p>
-        </div>
-        `
-    ).join("")
-}
+    charControl: (key) => {
+        let colIndex = col
+        let letterIndex = Number(letters[col].dataset.count)
 
-const resetHiScrSelect = () => {
-    for(let i = 0; i < letters.length; i++){
-        letters[i].dataset.count = 0
-        letters[i].innerHTML = 'A'
+        if(key == 'ArrowUp'){
+            if(letterIndex == lettersArr.length -1){
+                letterIndex = 0
+            }else{
+                letterIndex++
+            }
+        }else if(key == "ArrowDown"){
+            if(letterIndex == 0){
+                letterIndex = lettersArr.length - 1
+            }else{
+                letterIndex--
+            }
+        }else if(key == "ArrowRight"){
+            if(colIndex == letters.length -1){
+                colIndex = 0
+            }else{
+                colIndex++
+            }
+        }else if(key == "ArrowLeft"){
+            if(colIndex == 0){
+                colIndex = letters.length -1
+            }else{
+                colIndex--
+            }
+        }else if(key === 'Enter'){
+            handleHighScore.add()
+        }
+        letters[col].dataset.count = letterIndex
+        col = colIndex
+
+        handleHighScore.columnControl()
+    },
+
+    columnControl: () => {
+        for(let i = 0; i < letters.length; i++){
+            if(col == i){
+                letters[i].style.color = 'green'
+                letters[i].innerHTML = `${lettersMap.get(Number(letters[i].dataset.count))}`
+            }else{
+                letters[i].style.color = 'black'
+            }   
+        }
     }
-    highScore()
-    fetchData()
-    head.highScore = false
 }
-
-const openSetHighScore = () => {
-    selectDiv.style.opacity = '100%'
-
-}
-fetchData()
-// class HighScoreArr{
-//     constructor(){
-//         this.scoreArr = new Array(10)
-//         this.currentHighScore = 0
-//     }
-//     add (score, name){
-//         let HS = new HighScore(score, name)
-//      if(this.scoreArr.length == 10){
-//             this.scoreArr.pop()
-//         }
-//         this.scoreArr.unshift(HS)
-//         this.sortScores
-//     }
-//     print(){
-//         console.log(`Current highScore is ${this.currentHighScore}`, this.scoreArr)
-//     }
-//     checkScore (score){
-//         for(let i = 0; i < this.scoreArr.length; i++){
-//             if(score >= this.currentHighScore){
-//                 head.newHighScore =
-//             }
-//         }
-//     }
-//     sortScores(){
-//         let highest
-//         let highestIndex
-//         let arrCopy = [...this.scoreArr]
-//         let sortedArr = []
-//         for(let i = 0; i < this.scoreArr.length; i++){
-//             highest = arrCopy[0]
-//             for(let j = 0; j < arrCopy.length; j++){
-//                if(arrCopy[j].score >= highest.score){
-//                 highest = arrCopy[j]
-//                 highestIndex = j
-//                }
-//             }
-//             sortedArr.push(arrCopy[highestIndex])
-//             arrCopy.splice(highestIndex, 1)
-//         }
-//         this.scoreArr = [...sortedArr]
-//         this.currentHighScore = this.scoreArr[0].score
-//         this.print()
-//     }
-// }
-// class HighScore {
-//     constructor(score, name){
-//         this.score = score
-//         this.name = name
-//     }
-// }
-// // let highScores = new HighScoreArr()
-// // for(let j = 0; j < 15; j++){
-// //     let score = Math.floor(Math.random() * 10)
-// //     let name = `name${j}`
-// //     highScores.add(score, name)
-// // }
-// // highScores.sortScores()
+handleHighScore.get()
