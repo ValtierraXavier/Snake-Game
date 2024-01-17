@@ -382,6 +382,8 @@ const selectSizes = (e)=>{
         boardSize = size
         canvas.height = size
         canvas.width = size
+        selectDiv.style.width = `${size}px`
+        selectDiv.style.height = `${size}px`
         settings.style.width = `${size}px`
         settings.style.height = `${size}px`
     }else if(e.target.name === 'unitSize'){
@@ -406,15 +408,16 @@ wallSettings.onchange = (e)=>{selectSizes(e)}
 // add css and title.: Blank
 
 const letters = document.getElementsByClassName("letters")
-const selectDiv = document.getElementById('highScore')
+const selectDiv = document.getElementById('setHighscore')
 const out = document.getElementById('output')
+const setout = document.getElementById('setHSoutput')
+
 const lettersArr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W"
-,"X","Y","Z","!","@","#","$","%","^","&","*","(",")","_","-","+","-"]
+,"X","Y","Z","!","@","#","$","%","^","&","*","(",")","_","-","+"]
 const lettersMap = new Map()
 for(let i = 0; i < lettersArr.length; i++){
     lettersMap.set(i, lettersArr[i])
 }
-
 let col = 0;
 
  
@@ -450,12 +453,23 @@ const handleHighScore = {
 
         out.innerHTML = !data[0]? "No Highscore...yet" : data[0].highScores.map((el) =>
             `
-            <div id="score">
-                <p id="scoreName">Name: ${el.name}</p>
-                <p id="scoreValue">Score: ${el.score}</p>
+            <div class="score">
+                <p class="scoreName">Name: ${el.name}</p>
+                <p class="scoreValue">Score: ${el.score}</p>
             </div>
             `
-        ).join("")
+                ).join("")
+                
+                setout.innerHTML = !data[0]? 'No Highscore...Yet'
+                :
+                data[0].highScores.map((el, i) => 
+        `
+         
+            <div class="previousHS">
+               <p> ${i+2}. Name:${el.name} Score:${el.score}</p>
+            </div>    
+        `
+        ).join('')
     },
 
     reset: () => {
@@ -472,7 +486,7 @@ const handleHighScore = {
         selectDiv.style.visibility = 'visible'
         settings. style.opcaity = '0%'
         handleHighScore.columnControl()
-        
+        document.getElementById('setScore').innerHTML = ` Score:${head.currentScore}`
     },
     
     close: () => {
@@ -522,11 +536,13 @@ const handleHighScore = {
         for(let i = 0; i < letters.length; i++){
             if(col == i){
                 letters[i].style.color = 'green'
+                // letters[i].style.textDecoration = "underline"
                 letters[i].innerHTML = `${lettersMap.get(Number(letters[i].dataset.count))}`
             }else{
                 letters[i].style.color = 'black'
+                // letters[i].style.textDecoration = "none"
             }   
         }
-    }
+    },
 }
 handleHighScore.get()

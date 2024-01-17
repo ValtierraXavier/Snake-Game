@@ -57,15 +57,43 @@ label{
     height: 20px;
 }
 
-#highScore{
+#setHighscore{
+    display: flex;
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    z-index: 200;
+    visibility: visible;
+    opacity: 0%;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    align-items: center;
+    background-color:rgba(50,50,50,1); 
+    border-radius: 5px;
+    transition: .3s opacity ease .2s;
+    color: white;
+    overflow-y: auto;
+}
+
+#setHSoutput{
+    display: flex;
+    flex-flow: column nowrap;
+}
+.previousHS{
     display: flex;
     flex-flow: row nowrap;
-    justify-content: center;
+    justify-content: space-around;
+    white-space: nowrap;
+}
+#setHSoutput > div{
+    display: flex;
+    flex-flow: row nowrap;
 }
 .letters{
     margin: 0px;
     padding: 0px;
     text-align: center;
+    /* transition: .2s opacity ease-in-out */
 }
 
 #label{
@@ -84,13 +112,14 @@ label{
     font-size: 8px;
 }
 
-.chars{
+.nameSelection{
     display: flex;
     flex-flow: column nowrap;
     text-align: center;
+    white-space: pre;
 }
 
-#score{
+.score{
     border: solid black 2px;
     border-radius: 3px;
     margin-bottom: 5px;
