@@ -451,23 +451,22 @@ const handleHighScore = {
             data = await res.json()
         }catch(error){console.log(error.message)}
 
-        out.innerHTML = !data[0]? "No Highscore...yet" : data[0].highScores.map((el) =>
+        out.innerHTML = !data[0]? "No Highscore...yet" 
+        :
+        data[0].highScores.map((el) =>
             `
             <div class="score">
                 <p class="scoreName">Name: ${el.name}</p>
                 <p class="scoreValue">Score: ${el.score}</p>
             </div>
             `
-                ).join("")
+            ).join("")
                 
-                setout.innerHTML = !data[0]? 'No Highscore...Yet'
-                :
-                data[0].highScores.map((el, i) => 
+        setout.innerHTML = !data[0]? 'No Highscore...Yet'
+        :
+        data[0].highScores.map((el, i) => 
         `
-         
-            <div class="previousHS">
                <p> ${i+2}. Name:${el.name} Score:${el.score}</p>
-            </div>    
         `
         ).join('')
     },
@@ -483,7 +482,7 @@ const handleHighScore = {
     }, 
     open: () => {
         selectDiv.style.opacity = '100%'
-        selectDiv.style.visibility = 'visible'
+        selectDiv.style.zIndex = 400
         settings. style.opcaity = '0%'
         handleHighScore.columnControl()
         document.getElementById('setScore').innerHTML = ` Score:${head.currentScore}`
@@ -491,8 +490,9 @@ const handleHighScore = {
     
     close: () => {
         selectDiv.style.opacity = '0%'
-        selectDiv.style.visibility = 'hidden'
+        selectDiv.style.zIndex = 200
         settings. style.opcaity = '100%'
+        
     },
 
     charControl: (key) => {

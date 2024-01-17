@@ -64,9 +64,9 @@ label{
     height: 300px;
     z-index: 200;
     visibility: visible;
-    opacity: 0%;
-    flex-flow: row nowrap;
-    justify-content: space-around;
+    opacity: 100%;
+    flex-flow: column nowrap;
+    text-align: center;
     align-items: center;
     background-color:rgba(50,50,50,1); 
     border-radius: 5px;
@@ -93,7 +93,6 @@ label{
     margin: 0px;
     padding: 0px;
     text-align: center;
-    /* transition: .2s opacity ease-in-out */
 }
 
 #label{
@@ -112,11 +111,10 @@ label{
     font-size: 8px;
 }
 
-.nameSelection{
+#nameSelection{
     display: flex;
-    flex-flow: column nowrap;
-    text-align: center;
-    white-space: pre;
+    flex-flow: row nowrap;
+    white-space: nowrap;    
 }
 
 .score{
@@ -125,6 +123,9 @@ label{
     margin-bottom: 5px;
     padding: 5px;
     box-sizing: border-box;
+}
+#setScore{
+    white-space: pre;
 }
 
 #highscoresDiv{
