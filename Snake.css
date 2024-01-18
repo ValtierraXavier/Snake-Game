@@ -25,7 +25,7 @@ label{
     position: absolute;
     width: 300px;
     height: 300px;
-    z-index: 300;
+    z-index: 100;
     visibility: visible;
     opacity: 0%;
     flex-flow: row nowrap;
@@ -46,7 +46,10 @@ label{
 }
 #counter{ 
     position: relative;   
-    /* left: 5px; */
+}
+
+#newHSLabel{
+    text-decoration: underline
 }
 
 #selectionsDiv > div{
@@ -58,13 +61,10 @@ label{
 }
 
 #setHighscore{
-    display: flex;
+    display: none;
     position: absolute;
     width: 300px;
     height: 300px;
-    z-index: 200;
-    visibility: visible;
-    opacity: 100%;
     flex-flow: column nowrap;
     text-align: center;
     align-items: center;
@@ -73,6 +73,7 @@ label{
     transition: .3s opacity ease .2s;
     color: white;
     overflow-y: auto;
+    z-index: 500;
 }
 
 #setHSoutput{

@@ -56,6 +56,7 @@ const head = {
         food.getRandomCoordinates()
         settings.style.opacity = '0%'
         settings.style.visibility = 'hidden'
+
         interval = setInterval(
             () => {game()
         },head.speed)
@@ -77,7 +78,6 @@ const head = {
         if(head.paused == false && head.initial == false){
             head.paused = true
             head.stop()
-            // pauseDisplay.style.opacity = '100%'
             pauseDisplay.innerHTML = 'Paused'
             blinker = setInterval(()=>{
                 if(head.headColor == 'red'){
@@ -254,14 +254,13 @@ const game = ()=>{
     //draw black board
     drawBoard()
     //move snake head in a direction based on input
-    //if the up arrow key is pressed the snake head's coordinates will be decremented (go up) along the x-axis 
+    //if the up arrow key is pressed the snake head's coordinates will be decremented (go up) along the y-axis 
     if(head.currentKey === 'ArrowUp'){
         if(head.currentCoordinates.y === boardStart){
             wallDeath === 'false' ?
             head.currentCoordinates.y = boardSize - head.size:
             head.dead()
         }else{
-            
             head.currentCoordinates.y -= head.dy
         }
     }
@@ -373,7 +372,7 @@ const resetBoard = async () => {
     c.clearRect(boardStart, boardStart, boardSize, boardSize)
     drawBoard()
     head.draw()
-    pauseDisplay.innerHTML = 'Press Spacebar to Start'
+    pauseDisplay.innerHTML = head.highScore ? 'Enter High Score' :  'Press Spacebar to Start'
 }
 //alows useer toselect the board and snake/food sizes. also used to turn of fatal edges (touch the edge and you die)
 const selectSizes = (e)=>{
@@ -446,7 +445,7 @@ const handleHighScore = {
     get: async ()=>{
         let data
         try{
-            selectDiv.style.opacity = '0%'
+            // selectDiv.style.opacity = '0%'
             let res = await fetch('http://localhost:3020/score/get')
             data = await res.json()
         }catch(error){console.log(error.message)}
@@ -478,20 +477,20 @@ const handleHighScore = {
         }
         handleHighScore.charControl()
         handleHighScore.get()
+        handleHighScore.close()
         head.highScore = false
     }, 
     open: () => {
-        selectDiv.style.opacity = '100%'
-        selectDiv.style.zIndex = 400
-        settings. style.opcaity = '0%'
+        console.log('open')
+        selectDiv.style.display = 'flex'
+        settings.style.opacity = '0%'
         handleHighScore.columnControl()
         document.getElementById('setScore').innerHTML = ` Score:${head.currentScore}`
     },
     
     close: () => {
-        selectDiv.style.opacity = '0%'
-        selectDiv.style.zIndex = 200
-        settings. style.opcaity = '100%'
+        selectDiv.style.display = 'none'
+        settings. style.opacity = '100%'
         
     },
 
@@ -525,6 +524,7 @@ const handleHighScore = {
             }
         }else if(key === 'Enter'){
             handleHighScore.add()
+            pauseDisplay.innerHTML = 'Press Spacebar to Start'
         }
         letters[col].dataset.count = letterIndex
         col = colIndex
