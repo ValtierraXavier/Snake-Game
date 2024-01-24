@@ -11,19 +11,21 @@
     </head>
     <body>
             <aside id="highscoresDiv">
-                <div id="label">HighScores</div>
-                <div id="output"></div>                
+                <label id="label" for="output">HighScores</label>
+                <div id="output" name="output"></div>                
             </aside>
             <section class="gameArea" id="GameArea">
                 <div id="pauseDisplay">Press Spacebar to Start</div>
                 <section id="setHighscore">
                     <p id='newHSLabel'>New High Score</p>
-                    <div id="firstPlace">
-                        <p id="nameSelection">
-                            1. Name:<span class="letters" id="letter1" data-count = 0>A</span><span class="letters" id="letter2" data-count=0>A</span><span class="letters" id="letter3" data-count=0>A</span><span id="setScore"></span>
-                        </p>
+                    <div>
+                        <div id="firstPlace">
+                            <p id="nameSelection">
+                                1. Name:<span class="letters" id="letter1" data-count = 0>A</span><span class="letters" id="letter2" data-count=0>A</span><span class="letters" id="letter3" data-count=0>A</span><span id="setScore"></span>
+                            </p>
+                        </div>
+                        <div id="setHSoutput"></div>
                     </div>
-                    <div id="setHSoutput"></div>
                 </section>
                 <div id='selectionsDiv'>
                     <div>
@@ -54,7 +56,7 @@
                 <canvas id="canvas"></canvas>
             </div>
             <section id="counterSection">
-                Food Eaten:<h3 id="counter"> 0</h3>
+                Score:<h3 id="counter"> 0</h3>
             </section>
         </section>
     

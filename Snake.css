@@ -1,3 +1,17 @@
+@keyframes setScoreAni{
+    0% {color: white ; font-size: 1rem; }
+    25% {color: green; font-size: 1rem; }
+    50% {color: green; font-size: 1rem; }
+    100% {color: white; font-size: 1rem ; }
+}
+
+@keyframes firstPlAni{
+    0% {border: solid black 2px;}
+    25% {border: solid green 2px;}
+    50% {border: solid green 2px;}
+    100% {border: solid black 2px;}
+}
+
 body{
     display: flex;
     flex-flow: row nowrap;
@@ -9,6 +23,7 @@ body{
     padding:0;
     font-family: 'press start 2p';
     font-size: small;
+    background: linear-gradient(to bottom, grey, darkgrey);
 }
 
 label{
@@ -17,7 +32,7 @@ label{
 
 #pauseDisplay{
     opacity: 100%;
-    transition: opacity .2s ease-in-out
+    transition: opacity .2s ease-in-out;
 }
 
 #selectionsDiv {
@@ -49,7 +64,11 @@ label{
 }
 
 #newHSLabel{
-    text-decoration: underline
+    z-index:100;
+    display: inline-block;
+    text-decoration: underline;
+    position: fixed;
+    background-color:rgba(50,50,50,1); 
 }
 
 #selectionsDiv > div{
@@ -76,6 +95,11 @@ label{
     z-index: 500;
 }
 
+#setHighscore > div{
+    position: relative;
+    top: 2rem;
+}
+
 #setHSoutput{
     display: flex;
     flex-flow: column nowrap;
@@ -94,11 +118,15 @@ label{
     margin: 0px;
     padding: 0px;
     text-align: center;
+    animation-name: attr("data-ani");
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
 }
 
 #label{
-    margin-bottom: 5px;
+    margin: 3dvh 0dvh;
     text-decoration: underline;
+
 }
 
 #output{
@@ -106,8 +134,9 @@ label{
     position: relative;
     display: flex;
     flex-flow: column nowrap;
+    justify-content: space-around;
     overflow-y: auto;
-    height: 40dvh;
+    height: 900dvh;
     width: 20dvh;
     font-size: 8px;
 }
@@ -115,7 +144,24 @@ label{
 #nameSelection{
     display: flex;
     flex-flow: row nowrap;
-    white-space: nowrap;    
+    white-space: nowrap;  
+    align-items: center;
+}
+
+#pos{
+    float: left;
+}
+
+
+#firstPlace{
+    display: flex;
+    justify-content: center;
+}
+#firstPl{
+    animation-name: firstPlAni;
+    animation-duration: 2s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
 }
 
 .score{
@@ -134,5 +180,7 @@ label{
     flex-flow: column nowrap;
     text-align: center;    
     position: fixed;
+    height: 100dvh;
     left: 10px;
+    /* background: linear-gradient(#e66465, #9198e5); */
 }

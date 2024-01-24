@@ -19,12 +19,15 @@ const minY = (boardStart)
 const maxY = (boardSize)
 let interval
 let blinker
+const highestURL = "http://localhost:3020/score/get/highest"
+const getURL = "http://localhost:3020/score/get"
+const addURL = "http://localhost:3020/score/add"
 const blink = (ms) => {
     return new Promise 
     (resolve => setTimeout(()=>
     {resolve()}, ms))
 }
-
+console.log(process.env)
 const head = {
     currentCoordinates: {
         x: boardStart,
@@ -103,7 +106,7 @@ const head = {
     //Checks if the score (n) is higher than the current high score stored in the data base.
     isHiscore: async (n) => {
         try{
-            const res = await fetch("http://localhost:3020/score/get/highest")
+            const res = await fetch(highestURL)
             const data = await res.json()
             if(n >= data[0]?.score){
                 return true
@@ -430,7 +433,7 @@ const handleHighScore = {
         score
         }
         try{
-        const response = await fetch ('http://localhost:3020/score/add', {
+        const response = await fetch (addURL, {
             method: 'post',
             mode: 'cors',
             headers: {
@@ -446,28 +449,43 @@ const handleHighScore = {
         let data
         try{
             // selectDiv.style.opacity = '0%'
-            let res = await fetch('http://localhost:3020/score/get')
+            let res = await fetch(getURL)
             data = await res.json()
         }catch(error){console.log(error.message)}
 
         out.innerHTML = !data[0]? "No Highscore...yet" 
         :
-        data[0].highScores.map((el) =>
+        data[0].highScores.map((el, i) =>
+            i == 0 ?
+            
             `
-            <div class="score">
+            <div class= "score firstPlHS" id="firstPl">
+            <div id="pos">${i + 1}.</div>
                 <p class="scoreName">Name: ${el.name}</p>
                 <p class="scoreValue">Score: ${el.score}</p>
             </div>
             `
+            :
+            `
+            <div class="score">
+            <div id="pos">${i +1 }.</div>
+                <p class="scoreName">Name: ${el.name}</p>
+                <p class="scoreValue">Score: ${el.score}</p>
+            </div>
+            `
+            
             ).join("")
                 
-        setout.innerHTML = !data[0]? 'No Highscore...Yet'
+        setout.innerHTML = !data[0]? ''
         :
         data[0].highScores.map((el, i) => 
+        i == 9 ? ''
+        :
         `
                <p> ${i+2}. Name:${el.name} Score:${el.score}</p>
         `
         ).join('')
+    
     },
 
     reset: () => {
@@ -535,12 +553,10 @@ const handleHighScore = {
     columnControl: () => {
         for(let i = 0; i < letters.length; i++){
             if(col == i){
-                letters[i].style.color = 'green'
-                // letters[i].style.textDecoration = "underline"
+                letters[i].style.animationName = "setScoreAni"
                 letters[i].innerHTML = `${lettersMap.get(Number(letters[i].dataset.count))}`
             }else{
-                letters[i].style.color = 'black'
-                // letters[i].style.textDecoration = "none"
+                letters[i].style.animationName = ""
             }   
         }
     },
