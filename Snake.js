@@ -27,7 +27,6 @@ const blink = (ms) => {
     (resolve => setTimeout(()=>
     {resolve()}, ms))
 }
-console.log(process.env)
 const head = {
     currentCoordinates: {
         x: boardStart,
