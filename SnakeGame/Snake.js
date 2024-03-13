@@ -24,10 +24,10 @@ const minY = (boardStart)
 const maxY = (boardSize)
 let interval
 let blinker
-
-const highestURL = "http://localhost:3020/score/get/highest"
-const getURL = "http://localhost:3020/score/get"
-const addURL = "http://localhost:3020/score/add"
+const baseURL = 'https://snakedb-production.up.railway.app/'
+const highestURL = `${baseURL}/get/highest`
+const getURL = `${baseURL}/get`
+const addURL = `${baseURL}/add`
 
 const blink = (ms) => {
     return new Promise 
