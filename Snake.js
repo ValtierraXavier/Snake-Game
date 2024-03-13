@@ -1,5 +1,9 @@
 const canvas = document.getElementById("canvas")
-c = canvas.getContext("2d")
+let c = canvas.getContext("2d")
+const titleCanvas = document.getElementById("titleCanvas")
+let tC = titleCanvas.getContext("2d")
+titleCanvas.width = window.innerWidth
+titleCanvas.height = window.innerHeight
 const canvasSize = document.getElementById('boardSize')
 const unitSize = document.getElementById('unitSize')
 const wallSettings = document.getElementById('wall')
@@ -12,6 +16,7 @@ let boardStart = 0
 let boardSize = Number(canvasSize.value)
 canvas.height = Number(canvasSize.value)
 canvas.width = Number(canvasSize.value)
+let enterHi = false
 //the snake board (0,0 coordinates)
 const minX = (boardStart)
 const maxX = (boardSize)
@@ -19,14 +24,17 @@ const minY = (boardStart)
 const maxY = (boardSize)
 let interval
 let blinker
+
 const highestURL = "http://localhost:3020/score/get/highest"
 const getURL = "http://localhost:3020/score/get"
 const addURL = "http://localhost:3020/score/add"
+
 const blink = (ms) => {
     return new Promise 
     (resolve => setTimeout(()=>
     {resolve()}, ms))
 }
+
 const head = {
     currentCoordinates: {
         x: boardStart,
@@ -48,7 +56,8 @@ const head = {
     highScore: false,
     isDead: false,
     headColor: "red",
-    speed: 150,
+    speed: 200,
+    
     // starts the interval calls to draw the board
     start: () => {
         head.paused = false
@@ -58,7 +67,6 @@ const head = {
         food.getRandomCoordinates()
         settings.style.opacity = '0%'
         settings.style.visibility = 'hidden'
-
         interval = setInterval(
             () => {game()
         },head.speed)
@@ -67,12 +75,18 @@ const head = {
     stop: () => {
         clearInterval(interval);
     },
+    increase: () => {
+        if(head.length % 3 == 0){
+            head.speed -= 2
+        }
+        head.stop()
+        head.resume()
+    },
     //sets a new draw interval
     resume: () => {
         interval = setInterval(()=>{
             game()
         },head.speed)
-
     },
 
     //Clears the interval and flashes the snake head object
@@ -107,7 +121,7 @@ const head = {
         try{
             const res = await fetch(highestURL)
             const data = await res.json()
-            if(n >= data[0]?.score){
+            if(n > data[0]?.score){
                 return true
             }else if (data){
                 return false
@@ -117,15 +131,12 @@ const head = {
     //What to do when the snake dies.
     //Resets the board and clears the draw interval
     dead: async () => {
+        clearInterval(interval) 
         pauseDisplay.innerHTML = "Dead, Awww"
         head.isDead = true  
         head.displayPause = true   
         head.currentScore = head.length  
         head.highScore = await head.isHiscore(head.length) 
-        if(head.highScore){
-            handleHighScore.open()
-        }
-        clearInterval(interval) 
         for(let i = 0; i < 10; i++){
             await blink(350)
             if(head.headColor === "red"){
@@ -138,6 +149,9 @@ const head = {
         }
         settings.style.visibility = 'visible'
         settings.style.opacity = '100%'
+        if(head.highScore){
+           handleHighScore.open()
+        }
         resetBoard()
     },
     //Draws the snake head object on the canvas.
@@ -220,6 +234,8 @@ const food = {
     checkForFood: async() => {
         if(head.currentCoordinates.x == food.x && head.currentCoordinates.y == food.y){
             head.length++
+            head.increase()
+            console.log(head.speed)
             counter.innerHTML = head.length
             food.getRandomCoordinates()
             drawBoard()
@@ -236,13 +252,25 @@ const food = {
 window.addEventListener('DOMContentLoaded',()=>{
     settings.style.opacity = '0%'
     counterSection.style.opacity = '0%'
+    canvas.style.opacity = '100%'
+    let titleGradient = c.createLinearGradient(0, 0, canvas.width, 0)
+        titleGradient.addColorStop('.8', 'lightgrey')
+        titleGradient.addColorStop('.9', 'red')
+    drawBoard()
+    c.beginPath()
+    c.fillStyle = titleGradient
+    c.font = '30px Georgia ' 
+    c.textAlign = 'center'
+    c.fillText('Welcome to Snake!', canvas.width / 2, canvas.height / 2)
+    c.closePath()
     setTimeout(()=>{
         drawBoard()
         head.draw()
         canvas.focus()
         settings.style.opacity = '100%'
         counterSection.style.opacity = '100%'
-    },200)
+        pauseDisplay.style.opacity = '100%'
+    },2000)
 })
 
 //handle game functions
@@ -329,7 +357,7 @@ window.addEventListener('keydown',(e)=>{
 const setKey = (key) => {
     if(key.key === ' '){
         key.preventDefault()
-        if(head.isDead){
+        if(head.isDead || enterHi){
             return
         }if(head.initial){
             head.start()
@@ -374,7 +402,8 @@ const resetBoard = async () => {
     c.clearRect(boardStart, boardStart, boardSize, boardSize)
     drawBoard()
     head.draw()
-    pauseDisplay.innerHTML = head.highScore ? 'Enter High Score' :  'Press Spacebar to Start'
+    head.speed = 200
+    pauseDisplay.innerHTML = head.highScore ? 'Enter New High Score' :  'Press Spacebar to Start'
 }
 //alows useer toselect the board and snake/food sizes. also used to turn of fatal edges (touch the edge and you die)
 const selectSizes = (e)=>{
@@ -413,11 +442,15 @@ const selectDiv = document.getElementById('setHighscore')
 const out = document.getElementById('output')
 const setout = document.getElementById('setHSoutput')
 
-const lettersArr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W"
-,"X","Y","Z","!","@","#","$","%","^","&","*","(",")","_","-","+"]
+const charsArr = [
+    "A","B","C","D","E","F","G","H","I","J","K",
+    "L","M","N","O","P","Q","R","S","T","U","V",
+    "W","X","Y","Z","!","@","#","$","%","^","&",
+    "*","(",")","_","-","+"
+]
 const lettersMap = new Map()
-for(let i = 0; i < lettersArr.length; i++){
-    lettersMap.set(i, lettersArr[i])
+for(let i = 0; i < charsArr.length; i++){
+    lettersMap.set(i, charsArr[i])
 }
 let col = 0;
 
@@ -497,8 +530,8 @@ const handleHighScore = {
         handleHighScore.close()
         head.highScore = false
     }, 
-    open: () => {
-        console.log('open')
+    open: async () => {
+        enterHi = true
         selectDiv.style.display = 'flex'
         settings.style.opacity = '0%'
         handleHighScore.columnControl()
@@ -506,6 +539,7 @@ const handleHighScore = {
     },
     
     close: () => {
+        enterHi = false
         selectDiv.style.display = 'none'
         settings. style.opacity = '100%'
         
@@ -516,14 +550,14 @@ const handleHighScore = {
         let letterIndex = Number(letters[col].dataset.count)
 
         if(key == 'ArrowUp'){
-            if(letterIndex == lettersArr.length -1){
+            if(letterIndex == charsArr.length -1){
                 letterIndex = 0
             }else{
                 letterIndex++
             }
         }else if(key == "ArrowDown"){
             if(letterIndex == 0){
-                letterIndex = lettersArr.length - 1
+                letterIndex = charsArr.length - 1
             }else{
                 letterIndex--
             }

@@ -23,7 +23,28 @@ body{
     padding:0;
     font-family: 'press start 2p';
     font-size: small;
-    background: linear-gradient(to bottom, grey, darkgrey);
+    background: white;
+}
+
+#canvas{
+    opacity: 0%;
+    transition: opacity .2s .2s
+}
+#titleAnimation{
+    position: fixed;
+    display:none;
+    z-index: 200;
+    background-color: white;
+    width: 100dvw;
+    height: 100dvh;
+}
+
+#titleCanvas{
+    position: absolute;
+    display: inline;
+    z-index:300;
+    width: 100dvw;
+    height: 100dvh;
 }
 
 label{
@@ -31,7 +52,7 @@ label{
 }
 
 #pauseDisplay{
-    opacity: 100%;
+    opacity: 0%;
     transition: opacity .2s ease-in-out;
 }
 
@@ -47,7 +68,6 @@ label{
     justify-content: space-around;
     align-items: center;
     background-color:rgba(50,50,50,.3); 
-    border-radius: 5px;
     transition: .3s opacity ease .2s;
     color: white;
 }
@@ -88,7 +108,6 @@ label{
     text-align: center;
     align-items: center;
     background-color:rgba(50,50,50,1); 
-    border-radius: 5px;
     transition: .3s opacity ease .2s;
     color: white;
     overflow-y: auto;
@@ -130,16 +149,21 @@ label{
 }
 
 #output{
-    z-index: 900;
+    z-index: 0;
+    opacity: 100%;
     position: relative;
     display: flex;
     flex-flow: column nowrap;
-    justify-content: space-around;
     overflow-y: auto;
-    height: 900dvh;
-    width: 20dvh;
+    height: fit-content;
+    width: 15dvw;
     font-size: 8px;
+    transition: opacity .1s ease-in-out .2s
 }
+
+/* #output :hover{
+    z-index: 900;
+} */
 
 #nameSelection{
     display: flex;
@@ -177,10 +201,19 @@ label{
 
 #highscoresDiv{
     display: flex;
+    z-index: 0;
     flex-flow: column nowrap;
     text-align: center;    
     position: fixed;
     height: 100dvh;
     left: 10px;
-    /* background: linear-gradient(#e66465, #9198e5); */
+    top: 10px;
+    transition: height .2s ease-in-out;
 }
+
+/* #highscoresDiv:hover{
+    height: 100dvh;
+}
+#highscoresDiv:hover > #output{
+    opacity: 100%;
+} */
