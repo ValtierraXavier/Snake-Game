@@ -5,23 +5,63 @@
         <meta name="veiwport" content="width=device-width, initial-scale=1.0">
         <title>Classic Snake</title>
         <link rel="stylesheet" href="./Snake.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     </head>
     <body>
-        <section class="selections" id="selections">
-            <label for="boardSize">Board Size</label>
-            <select name="boardSize" id="boardSize" class="boardSizeSelection">
-                <option value=300>Small</option>
-                <option value=500>Medium</option>
-                <option value=800>Large</option>
-            </select>
-            <label for="unitSize">Snake Size</label>
-            <select name="unitSize" id="unitSize" class="unitSizeSelection">
-                <option>25</option>
-                <option>50</option>
-                <option>100</option>
-            </select>
+        <div id="titleAnimation">
+            <canvas id="titleCanvas"></canvas>
+        </div>
+        <aside id="highscoresDiv">
+            <label id="label" for="output">HighScores</label>
+            <div id="output" name="output"></div>                
+        </aside>
+        <section class="gameArea" id="GameArea">
+            <div id="pauseDisplay">Press Spacebar to Start</div>
+            <section id="setHighscore">
+                <p id='newHSLabel'>New High Score</p>
+                <div>
+                    <div id="firstPlace">
+                        <p id="nameSelection">
+                            1. Name:<span class="letters" id="letter1" data-count = 0>A</span><span class="letters" id="letter2" data-count=0>A</span><span class="letters" id="letter3" data-count=0>A</span><span id="setScore"></span>
+                        </p>
+                    </div>
+                    <div id="setHSoutput"></div>
+                </div>
+            </section>
+            <div id='selectionsDiv'>
+                <div>
+                    <label for="boardSize">Board Size</label>
+                    <select name="boardSize" id="boardSize" class="boardSizeSelection">
+                        <option value=300>Small</option>
+                        <option value=500>Medium</option>
+                        <option value=600>Large</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="unitSize">Snake Size</label>
+                    <select name="unitSize" id="unitSize" class="unitSizeSelection">
+                        <option value="25">Small</option>
+                        <option value="50">Medium</option>
+                        <option value="100">Large</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="wall">Fatal Edge</label>
+                    <select id="wall" name="wall">
+                        <option value='true'>Fatal</option>
+                        <option value='false'>Warp</option>
+                    </select>
+                </div>
+            </div>
+        <div id='canvasDiv'>
+            <canvas id="canvas"></canvas>
+        </div>
+        <section id="counterSection">
+            Score:<h3 id="counter"> 0</h3>
         </section>
-        <canvas id="canvas"></canvas>
+        </section>
     </body>
     <script src="./Snake.js"></script>
 </html>
