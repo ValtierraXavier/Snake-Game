@@ -1,4 +1,3 @@
-import document from './Snake.html'
 
 const canvas = document.getElementById("canvas")
 let c = canvas.getContext("2d")
