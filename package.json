@@ -1,8 +1,9 @@
 {
   "name": "snakeapp1",
+  "type": "module",
   "version": "1.0.0",
   "description": "A snake app coded soley by me =D",
-  "main": "index.js",
+  "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

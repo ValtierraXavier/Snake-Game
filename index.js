@@ -1,4 +1,3 @@
-
 const canvas = document.getElementById("canvas")
 let c = canvas.getContext("2d")
 const titleCanvas = document.getElementById("titleCanvas")
@@ -25,10 +24,11 @@ const minY = (boardStart)
 const maxY = (boardSize)
 let interval
 let blinker
-const baseURL = 'https://snakedb-production.up.railway.app/'
-const highestURL = `${baseURL}/get/highest`
-const getURL = `${baseURL}/get`
-const addURL = `${baseURL}/add`
+// const base = 'https://snakedb-production.up.railway.app/'
+const base = 'http://localhost:3020/score'
+const highestURL = `${base}/get/highest`
+const getURL = `${base}/get`
+const addURL = `${base}/add`
 
 const blink = (ms) => {
     return new Promise 
@@ -251,6 +251,7 @@ const food = {
 
 //Draw the board on initial load
 window.addEventListener('DOMContentLoaded',()=>{
+    handleHighScore.get()
     settings.style.opacity = '0%'
     counterSection.style.opacity = '0%'
     canvas.style.opacity = '100%'
@@ -481,7 +482,6 @@ const handleHighScore = {
     get: async ()=>{
         let data
         try{
-            // selectDiv.style.opacity = '0%'
             let res = await fetch(getURL)
             data = await res.json()
         }catch(error){console.log(error.message)}
@@ -595,4 +595,4 @@ const handleHighScore = {
         }
     },
 }
-handleHighScore.get()
+// handleHighScore.get()
