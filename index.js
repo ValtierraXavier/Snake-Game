@@ -24,7 +24,7 @@ const minY = (boardStart)
 const maxY = (boardSize)
 let interval
 let blinker
-const base = 'https://snakedb-production.up.railway.app'
+const base = 'https://snakedb-production.up.railway.app/score' 
 // const base = 'http://localhost:3020/score'
 const highestURL = `${base}/get/highest`
 const getURL = `${base}/get`
