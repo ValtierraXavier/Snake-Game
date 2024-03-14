@@ -40,10 +40,15 @@ Snake is a simple game with simple rules:
 
 #### Welcome to Snake!
 
+![Welcome to snake img](https://i.imgur.com/T3NHmKI.png)
+
 - When the webpage loads, a black square will apear in the middle of the screen with text saying 'Welcome to Snake!'.
 - Shortly after (2 seconds), the text will disapear and be replaced by 3 options.
 
 #### Options:
+
+![Options Screen](https://i.imgur.com/AXGeg8N.png)
+
 1. Board Size: Used to select the overall size of the game area.
 2. Snake Size: Used to select the size of the snake.
 3. Fatal Edge:
@@ -61,6 +66,9 @@ Text will appear above the game area. This will change, depending on whats happe
 
 #### Highscores
 
+![Highscores empty img](https://i.imgur.com/etuLoSH.png)
+![Highscores populated img](https://i.imgur.com/ct16Fa8.png)
+
 ###### Checking Highscores
 To the top left of the screen, youll notice the highscores display area. Upon loading the page, this area will start to retrieve the current highscores stored in the database.
 
@@ -69,6 +77,9 @@ If there are any highscores set, it will display the top five highscores set on 
 The highest score has a pulsing green border to demonstrate its superiority.
 
 ###### Setting a Highscore 
+
+![Add Highscore img](https://i.imgur.com/O5gGtS9.png)
+
 On the event that you've achieved a new highscore and the game ends, an overlay will open allowing you to set a 3 character name and save the score.
 
 Your score and name setting will be displayed atop the list at the 1st position. 
@@ -98,6 +109,10 @@ During the highscore setting process, you can use the arrow keys to select the c
 - (priority) The app currently only works on a computer (laptop, desktop) as it only accepts keyboard input.
    - Learn how to use touch input to control snake.
    - Give the app some responsive design for mobile sceen sizes.
+
+- Add a help tab
+   - Its not ideal to have to come here for basic controls information.
+   - Build a Hamburger menu off to the side that contains the highscores and help information. (Will be useful for mobile sized screens)
  
 
 Thanks for Reading!  [Try it out!](https://snake-game-production-a232.up.railway.app)
