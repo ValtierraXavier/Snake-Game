@@ -1,11 +1,11 @@
 {
   "name": "snakeapp1",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A snake app coded soley by me =D",
+  "main": "Snake.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Xavier Valtierra",
   "license": "ISC"
 }
