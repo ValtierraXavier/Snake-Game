@@ -119,7 +119,7 @@ const head = {
     //Checks if the score (n) is higher than the current high score stored in the data base.
     isHiscore: async (n) => {
         try{
-            const res = await fetch(highestURL)
+            const res = (await fetch(highestURL))
             const data = await res.json()
             if(n > data[0]?.score){
                 return true
