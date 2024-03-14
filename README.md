@@ -1,8 +1,30 @@
-# HTML Canvas Classic Snake
+# [HTML Canvas Classic Snake](https://snake-game-production-a232.up.railway.app)
 
 ---
 
-##### Using the HTML Canvas API to create a Snake game.
+#### Using the HTML Canvas API to create a Snake game.
+
+This project was made so I could learn a little about the HTML Canvas API...I ended up learning a lot!
+
+Like they say; The best way to effectively learn to code is simply to keep build projects.
+
+###### Technologies Used
+- HTML
+- CSS
+- JavaScript
+- Mongoose
+- Express
+- MongoDB Atlas
+- Canvas API
+
+This project uses, HTML, CSS and JavaScript to function. There is a MongoDB backend using mongoose and express to save highscores but the games functionality does not depend on it. 
+
+####### Things I learned 
+- Object Oriented Programming
+- Using Classes
+- Canvas API
+- New ways to map HTML through Javascript without using React framework.
+
 ## What is a Snake Game?
 Snake is a simple game with simple rules:
 - The snake starts off as just a head. There is also a bit of food.
@@ -16,7 +38,7 @@ Snake is a simple game with simple rules:
 
 ## Gameplay
 
-##### Welcome to Snake!
+#### Welcome to Snake!
 
 - When the webpage loads, a black square will apear in the middle of the screen with text saying 'Welcome to Snake!'.
 - Shortly after (2 seconds), the text will disapear and be replaced by 3 options.
@@ -33,9 +55,9 @@ Text will appear above the game area. This will change, depending on whats happe
 - Initially, it says 'Press Spacebar to Start'.
 - During an active gaming session; it will say 'Playing'.
 - When paused, it will display 'Paused'.
-- When the game ends; it will display 'Dead, Awww'
-- When the current game score has surpassed the highscore stored on the database, it will read 'New Highscore!!'
-- When the game ends and theres a new highscore; the new Highscore modal will open and the status bar will read 'Enter New Highscore'
+- When the game ends; it will display 'Dead, Awww'.
+- When the current game score has surpassed the highscore stored on the database, it will read 'New Highscore!!'.
+- When the game ends and theres a new highscore; the new Highscore modal will open and the status bar will read 'Enter New Highscore'.
 
 #### Highscores
 
@@ -57,10 +79,25 @@ The overlay will disappear and your score will be added to the first position of
 
 #### Controls
 
-Controls for this game are simple. There are six buttons to operate the game. upArrow, downArrow, leftArrow, rightArrow, SpaceBar, and Enter
+Controls for this game are simple. There are six buttons to operate the game. upArrow, downArrow, leftArrow, rightArrow, SpaceBar, and Enter.
 
 While the settings are displayed, the spacebar may be pressed to start the game.
 
 During gameplay, the arrow keys change the direction of the snake head. Pressing the spacebar in this state pauses the game. During a pause, the snake head will blink, and the tail and food will no longer be visible. 
 
 During the highscore setting process, you can use the arrow keys to select the characters for your name. Pressing enter during this time, submits the new highscore to the server.
+
+#### Areas for Improvement
+- (piority) Make it pretty: Im not gonna lie, its not the prettiest looking game out there.
+   - It needs a proper Title animation.
+   - The color choices need refining.
+   - Add a background to the overall page.
+   - Learn about sprites and implement an animation when food is eaten.
+   - figure out a better layout for the app.
+   
+- (priority) The app currently only works on a computer (laptop, desktop) as it only accepts keyboard input.
+   - Learn how to use touch input to control snake.
+   - Give the app some responsive design for mobile sceen sizes.
+ 
+
+Thanks for Reading!  [Try it out!](https://snake-game-production-a232.up.railway.app)
