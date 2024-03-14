@@ -25,16 +25,23 @@ Snake is a simple game with simple rules:
 1. Board Size: Used to select the overall size of the game area.
 2. Snake Size: Used to select the size of the snake.
 3. Fatal Edge:
+   - Fatal: Makes the edges of the game area a deadly to the snake. When you crash into the wall, the game ends.
+   - Warp: Makes the edges of the game area a warp to the opposite side. The game will not end if you advance beyond the confines of the game area.
 
 ##### Status Bar
-Text will appear above the game area. This will change, dending on whats happening  in-game.
--Initially, it says 'Press Spacebar to Start'.
--During an active gaming session; it will say 'Playing'.
--When paused, it will display 'Paused'.
--When the game ends; it will display 'Dead, Awww'
+Text will appear above the game area. This will change, depending on whats happening in-game.
+- Initially, it says 'Press Spacebar to Start'.
+- During an active gaming session; it will say 'Playing'.
+- When paused, it will display 'Paused'.
+- When the game ends; it will display 'Dead, Awww'
+- When the current game score has surpassed the highscore stored on the database, it will read 'New Highscore!!'
+- When the game ends and theres a new highscore; the new Highscore modal will open and the status bar will read 'Enter New Highscore'
+
+##### Highscores
+To the top left of the screen, youll notice the highscores display area. Upon loading the page, this area will start to retrieve the current highscores stored in the database.
+If there are any highscores set, it will display the top five highscores set on the game currently. If not, it will display 'No highscores...yet'.
+The highest score has a pulsing green border.
    
-- Fatal: Makes the edges of the game area a deadly to the snake. When you crash into the wall, the game ends.
-- Warp: Makes the edges of the game area a warp to the opposite side. The game will not end if you advance beyond the confines of the game area.
 
 
 
