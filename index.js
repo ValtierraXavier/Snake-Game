@@ -1,3 +1,4 @@
+//snake game!!
 const canvas = document.getElementById("canvas")
 let c = canvas.getContext("2d")
 const titleCanvas = document.getElementById("titleCanvas")
@@ -24,12 +25,12 @@ const minY = (boardStart)
 const maxY = (boardSize)
 let interval
 let blinker
-const base = 'https://snakedb-production.up.railway.app/score' 
+// const base = 'https://snakedb-production.up.railway.app/score' 
+const base = 'http://localhost:3020/score'
+
 const highestURL = `${base}/get/highest`
 const getURL = `${base}/get`
 const addURL = `${base}/add`
-
-console.log()
 
 const blink = (ms) => {
     return new Promise 
@@ -439,6 +440,7 @@ wallSettings.onchange = (e)=>{selectSizes(e)}
 // add display for "Paused" with snake head blinking (no food, no tail): Check
 // add css and title.: Blank
 
+//new highscore stuff below.
 const letters = document.getElementsByClassName("letters")
 const selectDiv = document.getElementById('setHighscore')
 const out = document.getElementById('output')
@@ -593,6 +595,5 @@ const handleHighScore = {
                 letters[i].style.animationName = ""
             }   
         }
-    },
+    }
 }
-// handleHighScore.get()
