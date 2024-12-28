@@ -237,7 +237,6 @@ const food = {
         if(head.currentCoordinates.x == food.x && head.currentCoordinates.y == food.y){
             head.length++
             head.increase()
-            console.log(head.speed)
             counter.innerHTML = head.length
             food.getRandomCoordinates()
             drawBoard()
