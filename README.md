@@ -84,7 +84,7 @@ On the event that you've achieved a new highscore and the game ends, an overlay 
 
 Your score and name setting will be displayed atop the list at the 1st position. 
 
-Navigate the character list with he arrow keys and hit enter once youre satidfied with your name.
+Navigate the character list with he arrow keys and hit enter once youre satisfied with your name.
 
 The overlay will disappear and your score will be added to the first position of the highscores position.
 
