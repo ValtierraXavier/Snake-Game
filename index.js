@@ -486,8 +486,7 @@ const handleHighScore = {
             data = await res.json()
         }catch(error){console.log(error.message)}
 
-        out.innerHTML = !data[0]? "No Highscore...yet" 
-        :
+        out.innerHTML = data? 
         data[0].highScores.map((el, i) =>
             i == 0 ?
             
@@ -507,9 +506,10 @@ const handleHighScore = {
             </div>
             `
             
-            ).join("")
+            ).join(""):
+            "No Highscore...yet" 
                 
-        setout.innerHTML = !data[0]? ''
+        setout.innerHTML = !data? ''
         :
         data[0].highScores.map((el, i) => 
         i == 9 ? ''
